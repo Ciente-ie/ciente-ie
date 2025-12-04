@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#007bff">
     <link rel="manifest" href="manifest.json">
-    <title>Ciente - Prontidão HRV</title>
+    <title>Ciente - Prontidão Fisiológica HRV</title>
 
     <style>
         :root {
             --app-height: 100vh;
             --vh: 1vh;
-            --version: '3.0';
+            --version: '3.1';
         }
 
         * {
@@ -387,14 +387,14 @@
 </head>
 
 <body>
-    <div class="version-info">v3.0</div>
+    <div class="version-info">v3.1</div>
     
-    <h1>🏥 Ciente - Prontidão Fisiológica HRV </h1>
+    <h1>🏥 Ciente - Prontidão Fisiológica HRV - 4 Atletas</h1>
     <div id="athletes"></div>
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        const APP_VERSION = '3.0';
+        const APP_VERSION = '3.1';
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -410,8 +410,8 @@
                 isMonitoring: false,
                 timeRemaining: 0,
                 isConnected: false,
-                lastHR: null,
-                lastRR: null
+                liveHR: null,
+                liveRR: null
             });
         }
 
@@ -488,7 +488,6 @@
                 monitoringData[i].heartChar = await svc.getCharacteristic(0x2A37);
                 await monitoringData[i].heartChar.startNotifications();
                 
-                // CORREÇÃO: Salva a referência do atleta atual
                 const currentAthleteIndex = i;
                 monitoringData[i].heartChar.addEventListener("characteristicvaluechanged", (e) => parseHR(e, currentAthleteIndex));
 
@@ -504,7 +503,7 @@
             }
         }
 
-        // ===== PARSE HR =====
+        // ===== PARSE HR - ATUALIZA SÓ DURANTE MONITORAMENTO =====
         function parseHR(e, i) {
             const v = e.target.value;
             if (!v) return;
@@ -512,12 +511,10 @@
             let flags = v.getUint8(0);
             let hr = (flags & 1) ? v.getUint16(1, true) : v.getUint8(1);
             
-            // Atualiza dados em tempo real IMEDIATAMENTE
-            document.getElementById(`fc${i}`).textContent = hr;
-            monitoringData[i].lastHR = hr;
-            
-            // Se estiver monitorando, salva nos arrays
+            // SÓ atualiza dados em tempo real se estiver monitorando
             if (monitoringData[i].isMonitoring) {
+                document.getElementById(`fc${i}`).textContent = hr;
+                monitoringData[i].liveHR = hr;
                 monitoringData[i].hrData.push(hr);
             }
             
@@ -525,12 +522,10 @@
             if (flags & 0x10) {
                 let rr = v.getUint16(pos, true);
                 
-                // Atualiza dados em tempo real IMEDIATAMENTE
-                document.getElementById(`rr${i}`).textContent = rr;
-                monitoringData[i].lastRR = rr;
-                
-                // Se estiver monitorando, salva nos arrays
+                // SÓ atualiza dados em tempo real se estiver monitorando
                 if (monitoringData[i].isMonitoring) {
+                    document.getElementById(`rr${i}`).textContent = rr;
+                    monitoringData[i].liveRR = rr;
                     monitoringData[i].rrData.push(rr);
                 }
             }
@@ -538,19 +533,15 @@
 
         // ===== MONITORAMENTO =====
         function startMonitoring(i) {
-            // Limpa dados anteriores MAS MANTÉM CONEXÃO
+            // Limpa dados anteriores
             monitoringData[i].rrData = [];
             monitoringData[i].hrData = [];
             monitoringData[i].isMonitoring = true;
             monitoringData[i].timeRemaining = CALIBRATION + MONITOR_TIME;
             
-            // CORREÇÃO: Mantém os valores atuais visíveis
-            if (monitoringData[i].lastHR !== null) {
-                document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR;
-            }
-            if (monitoringData[i].lastRR !== null) {
-                document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR;
-            }
+            // MOSTRA "--" ANTES DE COMEÇAR A RECEBER DADOS
+            document.getElementById(`fc${i}`).textContent = "--";
+            document.getElementById(`rr${i}`).textContent = "--";
             
             // Atualiza UI
             setStatus(i, "Calibrando...");
@@ -559,13 +550,13 @@
             document.getElementById(`connect${i}`).disabled = true;
             document.getElementById(`finish${i}`).style.display = "block";
             
-            // Limpa resultados anteriores
+            // Esconde resultados anteriores
             document.getElementById(`circle${i}`).style.visibility = "hidden";
             document.getElementById(`interp${i}`).style.visibility = "hidden";
             document.getElementById(`resultsMini${i}`).style.visibility = "hidden";
             document.getElementById(`resultsFull${i}`).style.display = "none";
 
-            // Limpa timer anterior se existir
+            // Limpa timer anterior
             if (monitoringData[i].timer) {
                 clearInterval(monitoringData[i].timer);
             }
@@ -586,7 +577,7 @@
                 if (monitoringData[i].timeRemaining <= 0) {
                     clearInterval(monitoringData[i].timer);
                     monitoringData[i].isMonitoring = false;
-                    finishMonitoring(i); // TERMINA AUTOMATICAMENTE
+                    finishMonitoring(i);
                 }
             }, 1000);
         }
@@ -595,19 +586,13 @@
         function cancelMonitoring(i) {
             console.log(`Cancelando monitoramento do atleta ${i}`);
             
-            // Para tudo mas MANTÉM CONEXÃO
             monitoringData[i].isMonitoring = false;
             
-            // Para o timer
             if (monitoringData[i].timer) {
                 clearInterval(monitoringData[i].timer);
                 monitoringData[i].timer = null;
             }
             
-            // CORREÇÃO: NÃO para as notificações Bluetooth
-            // Mantém a conexão ativa para dados ao vivo
-            
-            // NÃO CALCULA NADA - APENAS LIMPA
             resetUI(i);
             setStatus(i, "Aguardando...");
         }
@@ -619,11 +604,14 @@
             // Para animação ECG
             document.getElementById(`pulse${i}`).style.display = "none";
             
+            // RESETA DADOS EM TEMPO REAL PARA "--"
+            document.getElementById(`fc${i}`).textContent = "--";
+            document.getElementById(`rr${i}`).textContent = "--";
+            
             // Calcula resultados apenas se tem dados suficientes
             if (monitoringData[i].rrData.length >= 3) {
                 calculateAndDisplayResults(i);
             } else {
-                // Se não tem dados suficientes, apenas reseta
                 resetUI(i);
                 setStatus(i, "Dados insuficientes");
             }
@@ -643,10 +631,6 @@
                 Math.round(monitoringData[i].rrData.reduce((a, b) => a + b, 0) / monitoringData[i].rrData.length) : 0;
             let meanHR = monitoringData[i].hrData.length > 0 ? 
                 Math.round(monitoringData[i].hrData.reduce((a, b) => a + b, 0) / monitoringData[i].hrData.length) : 0;
-
-            // CORREÇÃO: Mantém os dados atuais visíveis
-            document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR || meanHR;
-            document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR || meanRR;
 
             // CÁLCULO DO SCORE
             let score;
@@ -731,10 +715,12 @@
 
         // ===== RESET UI =====
         function resetUI(i) {
-            // Limpa arrays de monitoramento MAS MANTÉM ÚLTIMOS VALORES
+            // Limpa arrays de monitoramento
             monitoringData[i].rrData = [];
             monitoringData[i].hrData = [];
             monitoringData[i].isMonitoring = false;
+            monitoringData[i].liveHR = null;
+            monitoringData[i].liveRR = null;
             
             // Para timer
             if (monitoringData[i].timer) {
@@ -742,8 +728,11 @@
                 monitoringData[i].timer = null;
             }
             
-            // CORREÇÃO: NÃO reseta os valores visíveis se estiver conectado
-            // Apenas esconde resultados
+            // RESETA DADOS EM TEMPO REAL PARA "--"
+            document.getElementById(`fc${i}`).textContent = "--";
+            document.getElementById(`rr${i}`).textContent = "--";
+            
+            // Esconde elementos visuais
             document.getElementById(`pulse${i}`).style.display = "none";
             document.getElementById(`circle${i}`).style.visibility = "hidden";
             document.getElementById(`interp${i}`).style.visibility = "hidden";
@@ -754,20 +743,6 @@
             document.getElementById(`start${i}`).disabled = !monitoringData[i].isConnected;
             document.getElementById(`finish${i}`).style.display = "none";
             document.getElementById(`connect${i}`).disabled = false;
-            
-            // CORREÇÃO: Só mostra "--" se não estiver conectado
-            if (!monitoringData[i].isConnected) {
-                document.getElementById(`fc${i}`).textContent = "--";
-                document.getElementById(`rr${i}`).textContent = "--";
-            } else {
-                // Se conectado, mantém os últimos valores
-                if (monitoringData[i].lastHR !== null) {
-                    document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR;
-                }
-                if (monitoringData[i].lastRR !== null) {
-                    document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR;
-                }
-            }
         }
 
         // ===== SET STATUS =====
@@ -775,15 +750,13 @@
             document.getElementById(`status${i}`).textContent = m;
         }
 
-        // ===== DESCONECTAR BLUETOOTH (quando necessário) =====
+        // ===== DESCONECTAR BLUETOOTH =====
         function disconnectBluetooth(i) {
             if (monitoringData[i].heartChar) {
                 monitoringData[i].heartChar.stopNotifications();
                 monitoringData[i].heartChar = null;
             }
             monitoringData[i].isConnected = false;
-            monitoringData[i].lastHR = null;
-            monitoringData[i].lastRR = null;
             
             // Atualiza UI
             document.getElementById(`connect${i}`).classList.remove("connected");
@@ -803,5 +776,4 @@
         });
     </script>
 </body>
-
 </html>
