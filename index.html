@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#007bff">
+    <link rel="manifest" href="manifest.json">
+    <title>Ciente - Prontidão HRV</title>
+
+    <style>
+        :root {
+            --app-height: 100vh;
+            --vh: 1vh;
+            --version: '3.0';
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #eef1f3;
+            margin: 0;
+            padding: 10px;
+            color: #222;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 5px 0 15px 0;
+            color: #1a1a1a;
+            text-align: center;
+            width: 100%;
+            padding: 0;
+        }
+
+        #athletes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 10px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            display: flex;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            height: fit-content;
+            min-height: 200px;
+        }
+
+        /* LADO ESQUERDO - SUPER COMPACTO */
+        .left {
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .left select {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            margin-bottom: 8px;
+            font-size: 12px;
+            background: white;
+            height: 32px;
+            font-weight: 500;
+        }
+
+        .left button {
+            width: 100%;
+            padding: 7px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 7px;
+            min-height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .connect { background: #007bff; color:#fff; }
+        .connect.connected { background: #009b2e !important; }
+        .start { background: #ff9800; color:white; }
+        .start:disabled { background: #c77b00; cursor: not-allowed; opacity: 0.7; }
+        .finish { background: #d91b61; color:white; display:none; }
+
+        .status {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 6px;
+            color: #222;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 1.2;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* LADO DIREITO - DADOS E CÍRCULO LADO A LADO */
+        .right {
+            width: calc(100% - 132px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 8px;
+            min-height: 100px;
+        }
+
+        .live-data {
+            flex: 1;
+        }
+
+        .live-data p {
+            margin: 0 0 4px 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .live-data span {
+            font-weight: 700;
+            font-size: 15px;
+            color: #007bff;
+        }
+
+        /* RESULTADOS MÍNIMOS */
+        .results-mini {
+            font-size: 10px;
+            font-weight: 600;
+            visibility: hidden;
+            line-height: 1.2;
+            text-align: left;
+            padding: 5px 6px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 4px;
+            border-left: 3px solid #007bff;
+            max-width: 140px;
+        }
+
+        /* CÍRCULO DE SCORE */
+        .score-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 100px;
+            max-width: 100px;
+        }
+
+        .scoreCircle {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            font-size: 22px;
+            font-weight: 800;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            color: #fff;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid white;
+            margin-bottom: 5px;
+        }
+
+        .interp {
+            font-size: 10px;
+            font-weight: 700;
+            visibility: hidden;
+            text-align: center;
+            line-height: 1.2;
+            padding: 4px 5px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.95);
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* ECG animation */
+        .pulseRow {
+            display: none;
+            gap: 3px;
+            align-items: flex-end;
+            height: 25px;
+            justify-content: center;
+            margin: 6px 0;
+        }
+
+        .pulseBar {
+            width: 6px;
+            height: 15px;
+            background: #ff2b2b;
+            animation: pulse 0.7s ease-in-out infinite alternate;
+            border-radius: 2px 2px 0 0;
+        }
+
+        @keyframes pulse {
+            0% { height: 6px; opacity: 0.6; }
+            100% { height: 20px; opacity: 1; }
+        }
+
+        /* RESULTADOS COMPLETOS */
+        .results-full {
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.3;
+            text-align: left;
+            padding: 6px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* Hover effects */
+        button:hover { filter: brightness(0.92); }
+        button:active { transform: scale(0.97); }
+
+        /* MOBILE (até 767px) - 1 CARD POR LINHA */
+        @media (max-width: 767px) {
+            body {
+                padding: 8px;
+            }
+            
+            #athletes {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, auto);
+                gap: 8px;
+            }
+            
+            .card {
+                width: 100%;
+                min-width: unset;
+                flex-direction: column;
+                padding: 10px;
+                min-height: auto;
+            }
+            
+            .left {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .right {
+                width: 100%;
+            }
+            
+            .data-row {
+                flex-direction: column;
+                gap: 8px;
+                min-height: auto;
+            }
+            
+            .scoreCircle {
+                width: 70px;
+                height: 70px;
+                font-size: 20px;
+            }
+            
+            h1 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* TABLET (768px a 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            #athletes {
+                gap: 8px;
+            }
+            
+            .card {
+                padding: 10px;
+                gap: 10px;
+                min-height: 190px;
+            }
+            
+            .left {
+                width: 110px;
+            }
+            
+            .right {
+                width: calc(100% - 120px);
+            }
+            
+            .scoreCircle {
+                width: 70px;
+                height: 70px;
+                font-size: 20px;
+            }
+            
+            .interp {
+                font-size: 9px;
+                padding: 3px 4px;
+            }
+        }
+
+        /* DESKTOP (1025px+) */
+        @media (min-width: 1025px) {
+            body {
+                padding: 15px;
+            }
+            
+            #athletes {
+                gap: 12px;
+                max-width: 1300px;
+            }
+            
+            .card {
+                padding: 14px;
+                min-height: 210px;
+            }
+            
+            .left {
+                width: 130px;
+            }
+            
+            .right {
+                width: calc(100% - 142px);
+            }
+            
+            .scoreCircle {
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
+            }
+            
+            h1 {
+                font-size: 22px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* VERSÃO INFO */
+        .version-info {
+            position: fixed;
+            top: 8px;
+            right: 8px;
+            font-size: 9px;
+            color: #999;
+            background: rgba(255,255,255,0.9);
+            padding: 2px 6px;
+            border-radius: 8px;
+            z-index: 999;
+            border: 1px solid #eee;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="version-info">v3.0</div>
+    
+    <h1>🏥 Ciente - Prontidão HRV - 4 Atletas</h1>
+    <div id="athletes"></div>
+
+    <script>
+        // ===== CONFIGURAÇÕES =====
+        const APP_VERSION = '3.0';
+        const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
+        const MONITOR_TIME = 60;
+        const CALIBRATION = 10;
+
+        // Variáveis para 4 atletas
+        let monitoringData = [];
+        for (let i = 0; i < 4; i++) {
+            monitoringData.push({
+                rrData: [],
+                hrData: [],
+                heartChar: null,
+                timer: null,
+                isMonitoring: false,
+                timeRemaining: 0,
+                isConnected: false,
+                lastHR: null,
+                lastRR: null
+            });
+        }
+
+        // ===== SERVICE WORKER =====
+        function setupServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js?v=' + APP_VERSION)
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado');
+                    })
+                    .catch(error => {
+                        console.error('❌ Erro Service Worker:', error);
+                    });
+            }
+        }
+
+        // ===== CONSTRUIR INTERFACE =====
+        function buildUI() {
+            const container = document.getElementById("athletes");
+            container.innerHTML = '';
+
+            for (let i = 0; i < 4; i++) {
+                container.insertAdjacentHTML("beforeend", `
+                <div class="card">
+                    <div class="left">
+                        <select id="athleteSelect${i}">
+                            ${athletesList.map(a => `<option>${a}</option>`)}
+                        </select>
+                        <button id="connect${i}" class="connect">Conectar</button>
+                        <button id="start${i}" class="start" disabled>Iniciar</button>
+                        <button id="finish${i}" class="finish">Finalizar</button>
+                        <p id="status${i}" class="status">Aguardando...</p>
+                    </div>
+                    <div class="right">
+                        <div class="data-row">
+                            <div class="live-data">
+                                <p><b>FC:</b> <span id="fc${i}">--</span> bpm</p>
+                                <p><b>RR:</b> <span id="rr${i}">--</span> ms</p>
+                                <div class="pulseRow" id="pulse${i}">
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                </div>
+                                <div id="resultsMini${i}" class="results-mini"></div>
+                            </div>
+                            <div class="score-circle-container">
+                                <div id="circle${i}" class="scoreCircle"></div>
+                                <div id="interp${i}" class="interp"></div>
+                            </div>
+                        </div>
+                        <div id="resultsFull${i}" class="results-full"></div>
+                    </div>
+                </div>`);
+
+                document.getElementById(`connect${i}`).onclick = () => connectPolar(i);
+                document.getElementById(`start${i}`).onclick = () => startMonitoring(i);
+                document.getElementById(`finish${i}`).onclick = () => cancelMonitoring(i);
+                
+                document.getElementById(`start${i}`).disabled = true;
+            }
+        }
+
+        // ===== BLUETOOTH =====
+        async function connectPolar(i) {
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [{ namePrefix: "Polar" }],
+                    optionalServices: [0x180D]
+                });
+                let server = await device.gatt.connect();
+                let svc = await server.getPrimaryService(0x180D);
+                monitoringData[i].heartChar = await svc.getCharacteristic(0x2A37);
+                await monitoringData[i].heartChar.startNotifications();
+                
+                // CORREÇÃO: Salva a referência do atleta atual
+                const currentAthleteIndex = i;
+                monitoringData[i].heartChar.addEventListener("characteristicvaluechanged", (e) => parseHR(e, currentAthleteIndex));
+
+                setStatus(i, "Conectado!");
+                document.getElementById(`connect${i}`).classList.add("connected");
+                document.getElementById(`connect${i}`).innerHTML = "Conectado";
+                document.getElementById(`start${i}`).disabled = false;
+                monitoringData[i].isConnected = true;
+
+            } catch (err) {
+                setStatus(i, "Erro ao conectar");
+                monitoringData[i].isConnected = false;
+            }
+        }
+
+        // ===== PARSE HR =====
+        function parseHR(e, i) {
+            const v = e.target.value;
+            if (!v) return;
+            
+            let flags = v.getUint8(0);
+            let hr = (flags & 1) ? v.getUint16(1, true) : v.getUint8(1);
+            
+            // Atualiza dados em tempo real IMEDIATAMENTE
+            document.getElementById(`fc${i}`).textContent = hr;
+            monitoringData[i].lastHR = hr;
+            
+            // Se estiver monitorando, salva nos arrays
+            if (monitoringData[i].isMonitoring) {
+                monitoringData[i].hrData.push(hr);
+            }
+            
+            let pos = (flags & 1) ? 3 : 2;
+            if (flags & 0x10) {
+                let rr = v.getUint16(pos, true);
+                
+                // Atualiza dados em tempo real IMEDIATAMENTE
+                document.getElementById(`rr${i}`).textContent = rr;
+                monitoringData[i].lastRR = rr;
+                
+                // Se estiver monitorando, salva nos arrays
+                if (monitoringData[i].isMonitoring) {
+                    monitoringData[i].rrData.push(rr);
+                }
+            }
+        }
+
+        // ===== MONITORAMENTO =====
+        function startMonitoring(i) {
+            // Limpa dados anteriores MAS MANTÉM CONEXÃO
+            monitoringData[i].rrData = [];
+            monitoringData[i].hrData = [];
+            monitoringData[i].isMonitoring = true;
+            monitoringData[i].timeRemaining = CALIBRATION + MONITOR_TIME;
+            
+            // CORREÇÃO: Mantém os valores atuais visíveis
+            if (monitoringData[i].lastHR !== null) {
+                document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR;
+            }
+            if (monitoringData[i].lastRR !== null) {
+                document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR;
+            }
+            
+            // Atualiza UI
+            setStatus(i, "Calibrando...");
+            document.getElementById(`pulse${i}`).style.display = "flex";
+            document.getElementById(`start${i}`).disabled = true;
+            document.getElementById(`connect${i}`).disabled = true;
+            document.getElementById(`finish${i}`).style.display = "block";
+            
+            // Limpa resultados anteriores
+            document.getElementById(`circle${i}`).style.visibility = "hidden";
+            document.getElementById(`interp${i}`).style.visibility = "hidden";
+            document.getElementById(`resultsMini${i}`).style.visibility = "hidden";
+            document.getElementById(`resultsFull${i}`).style.display = "none";
+
+            // Limpa timer anterior se existir
+            if (monitoringData[i].timer) {
+                clearInterval(monitoringData[i].timer);
+            }
+            
+            // Inicia novo timer
+            monitoringData[i].timer = setInterval(() => {
+                if (!monitoringData[i].isMonitoring) {
+                    clearInterval(monitoringData[i].timer);
+                    return;
+                }
+                
+                monitoringData[i].timeRemaining--;
+                
+                setStatus(i, monitoringData[i].timeRemaining > MONITOR_TIME ? 
+                    `Calibrando (${monitoringData[i].timeRemaining - MONITOR_TIME}s)` : 
+                    `Analisando (${monitoringData[i].timeRemaining}s)`);
+
+                if (monitoringData[i].timeRemaining <= 0) {
+                    clearInterval(monitoringData[i].timer);
+                    monitoringData[i].isMonitoring = false;
+                    finishMonitoring(i); // TERMINA AUTOMATICAMENTE
+                }
+            }, 1000);
+        }
+
+        // ===== CANCELAR MONITORAMENTO =====
+        function cancelMonitoring(i) {
+            console.log(`Cancelando monitoramento do atleta ${i}`);
+            
+            // Para tudo mas MANTÉM CONEXÃO
+            monitoringData[i].isMonitoring = false;
+            
+            // Para o timer
+            if (monitoringData[i].timer) {
+                clearInterval(monitoringData[i].timer);
+                monitoringData[i].timer = null;
+            }
+            
+            // CORREÇÃO: NÃO para as notificações Bluetooth
+            // Mantém a conexão ativa para dados ao vivo
+            
+            // NÃO CALCULA NADA - APENAS LIMPA
+            resetUI(i);
+            setStatus(i, "Aguardando...");
+        }
+
+        // ===== FINALIZAR TESTE AUTOMÁTICO =====
+        function finishMonitoring(i) {
+            console.log(`Finalizando monitoramento automático do atleta ${i}`);
+            
+            // Para animação ECG
+            document.getElementById(`pulse${i}`).style.display = "none";
+            
+            // Calcula resultados apenas se tem dados suficientes
+            if (monitoringData[i].rrData.length >= 3) {
+                calculateAndDisplayResults(i);
+            } else {
+                // Se não tem dados suficientes, apenas reseta
+                resetUI(i);
+                setStatus(i, "Dados insuficientes");
+            }
+        }
+
+        // ===== CÁLCULO lnRMSSD =====
+        function calcLnRR(rr) {
+            if (rr.length < 3) return 0;
+            let diffs = rr.slice(1).map((v, i) => (v - rr[i]) ** 2);
+            return +(Math.log(Math.sqrt(diffs.reduce((a, b) => a + b) / diffs.length))).toFixed(2);
+        }
+
+        // ===== CALCULAR E EXIBIR RESULTADOS =====
+        function calculateAndDisplayResults(i) {
+            let ln = calcLnRR(monitoringData[i].rrData);
+            let meanRR = monitoringData[i].rrData.length > 0 ? 
+                Math.round(monitoringData[i].rrData.reduce((a, b) => a + b, 0) / monitoringData[i].rrData.length) : 0;
+            let meanHR = monitoringData[i].hrData.length > 0 ? 
+                Math.round(monitoringData[i].hrData.reduce((a, b) => a + b, 0) / monitoringData[i].hrData.length) : 0;
+
+            // CORREÇÃO: Mantém os dados atuais visíveis
+            document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR || meanHR;
+            document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR || meanRR;
+
+            // CÁLCULO DO SCORE
+            let score;
+            if (ln < 3.0) {
+                score = 10 + ((ln - 2.0) * 20);
+            } 
+            else if (ln < 4.0) {
+                score = 30 + ((ln - 3.0) * 25);
+            } 
+            else if (ln < 5.0) {
+                score = 55 + ((ln - 4.0) * 20);
+            } 
+            else if (ln < 6.0) {
+                score = 75 + ((ln - 5.0) * 15);
+            } 
+            else {
+                score = 90 + Math.min((ln - 6.0) * 5, 5);
+            }
+
+            score = Math.round(Math.max(10, Math.min(score, 95)));
+
+            let circle = document.getElementById(`circle${i}`);
+            let interp = document.getElementById(`interp${i}`);
+            let resultsMini = document.getElementById(`resultsMini${i}`);
+            let resultsFull = document.getElementById(`resultsFull${i}`);
+
+            // Exibe resultados MÍNIMOS
+            resultsMini.innerHTML = `ln: ${ln}<br>RR: ${meanRR}ms`;
+            resultsMini.style.visibility = "visible";
+            
+            // Exibe resultados COMPLETOS
+            resultsFull.innerHTML = `<b>Resultados completos:</b><br>lnRMSSD: ${ln}<br>RR Médio: ${meanRR} ms<br>FC Média: ${meanHR} bpm<br>Pontuação: ${score}/95`;
+            resultsFull.style.display = "block";
+
+            // Mostra círculo e interpretação
+            circle.style.visibility = interp.style.visibility = "visible";
+
+            // LEGENDAS
+            let interpretation = "";
+            let color = "";
+
+            if (score <= 30) {
+                interpretation = "⚠️ Rec. Muito Baixa";
+                color = "#d60000";
+            } 
+            else if (score <= 55) {
+                interpretation = "🔶 Rec. Baixa";
+                color = "#ff7f00";
+            } 
+            else if (score <= 75) {
+                interpretation = "🟡 Rec. Moderada";
+                color = "#ffcc00";
+            } 
+            else if (score <= 90) {
+                interpretation = "✅ Rec. Boa";
+                color = "#87c440";
+            } 
+            else {
+                interpretation = "🏆 Rec. Excelente";
+                color = "#008f14";
+            }
+
+            circle.style.background = color;
+            interp.textContent = interpretation;
+            circle.textContent = score;
+
+            saveCSV(i);
+            document.getElementById(`connect${i}`).disabled = false;
+            setStatus(i, "Concluído!");
+        }
+
+        // ===== SALVAR CSV =====
+        function saveCSV(i) {
+            if (monitoringData[i].rrData.length < 3) return;
+            let athlete = document.getElementById(`athleteSelect${i}`).value;
+            let csv = "RR\n" + monitoringData[i].rrData.join("\n");
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+            a.download = `${athlete}_HRV_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // ===== RESET UI =====
+        function resetUI(i) {
+            // Limpa arrays de monitoramento MAS MANTÉM ÚLTIMOS VALORES
+            monitoringData[i].rrData = [];
+            monitoringData[i].hrData = [];
+            monitoringData[i].isMonitoring = false;
+            
+            // Para timer
+            if (monitoringData[i].timer) {
+                clearInterval(monitoringData[i].timer);
+                monitoringData[i].timer = null;
+            }
+            
+            // CORREÇÃO: NÃO reseta os valores visíveis se estiver conectado
+            // Apenas esconde resultados
+            document.getElementById(`pulse${i}`).style.display = "none";
+            document.getElementById(`circle${i}`).style.visibility = "hidden";
+            document.getElementById(`interp${i}`).style.visibility = "hidden";
+            document.getElementById(`resultsMini${i}`).style.visibility = "hidden";
+            document.getElementById(`resultsFull${i}`).style.display = "none";
+            
+            // Ativa botões
+            document.getElementById(`start${i}`).disabled = !monitoringData[i].isConnected;
+            document.getElementById(`finish${i}`).style.display = "none";
+            document.getElementById(`connect${i}`).disabled = false;
+            
+            // CORREÇÃO: Só mostra "--" se não estiver conectado
+            if (!monitoringData[i].isConnected) {
+                document.getElementById(`fc${i}`).textContent = "--";
+                document.getElementById(`rr${i}`).textContent = "--";
+            } else {
+                // Se conectado, mantém os últimos valores
+                if (monitoringData[i].lastHR !== null) {
+                    document.getElementById(`fc${i}`).textContent = monitoringData[i].lastHR;
+                }
+                if (monitoringData[i].lastRR !== null) {
+                    document.getElementById(`rr${i}`).textContent = monitoringData[i].lastRR;
+                }
+            }
+        }
+
+        // ===== SET STATUS =====
+        function setStatus(i, m) {
+            document.getElementById(`status${i}`).textContent = m;
+        }
+
+        // ===== DESCONECTAR BLUETOOTH (quando necessário) =====
+        function disconnectBluetooth(i) {
+            if (monitoringData[i].heartChar) {
+                monitoringData[i].heartChar.stopNotifications();
+                monitoringData[i].heartChar = null;
+            }
+            monitoringData[i].isConnected = false;
+            monitoringData[i].lastHR = null;
+            monitoringData[i].lastRR = null;
+            
+            // Atualiza UI
+            document.getElementById(`connect${i}`).classList.remove("connected");
+            document.getElementById(`connect${i}`).innerHTML = "Conectar";
+            document.getElementById(`start${i}`).disabled = true;
+            document.getElementById(`fc${i}`).textContent = "--";
+            document.getElementById(`rr${i}`).textContent = "--";
+            setStatus(i, "Aguardando...");
+        }
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log(`🚀 Iniciando Ciente HRV v${APP_VERSION} - 4 Atletas`);
+            
+            buildUI();
+            setupServiceWorker();
+        });
+    </script>
+</body>
+</html>
