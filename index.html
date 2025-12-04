@@ -21,6 +21,7 @@
             font-weight: 700;
             margin-bottom: 25px;
             color: #1a1a1a;
+            text-align: center;
         }
 
         .card {
@@ -30,7 +31,7 @@
             border-radius: 16px;
             padding: 22px 28px;
             border: 2px solid #dedede;
-            margin-bottom: 25px;
+            margin: 0 auto 25px;
             display: flex;
             justify-content: space-between;
             gap: 32px;
@@ -150,6 +151,7 @@
             font-weight: 700;
             visibility: hidden;
             text-align: left;
+            max-width: 200px;
         }
 
         .results {
@@ -173,6 +175,86 @@
             }
             button {
                 width: 155px;
+            }
+        }
+
+        /* Mobile - Responsividade para ambas orientações */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .card {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .left, .right {
+                width: 100%;
+                border-left: none;
+                border-top: 2px solid #e2e2e2;
+                padding-left: 0;
+                padding-top: 20px;
+            }
+            
+            .left {
+                border-top: none;
+                padding-top: 0;
+            }
+            
+            .scoreSection {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .scoreContainer {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 15px;
+            }
+            
+            .scoreCircle {
+                width: 120px;
+                height: 120px;
+                font-size: 36px;
+            }
+            
+            .pulseRow {
+                justify-content: center;
+                margin: 15px 0;
+            }
+            
+            select, button {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        /* Orientação landscape em mobile */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .card {
+                padding: 12px 16px;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .scoreCircle {
+                width: 100px;
+                height: 100px;
+                font-size: 32px;
+            }
+            
+            button {
+                width: 140px;
+                padding: 10px;
+                font-size: 14px;
             }
         }
 
@@ -311,7 +393,7 @@
             return +(Math.log(Math.sqrt(diffs.reduce((a, b) => a + b) / diffs.length))).toFixed(2);
         }
 
-        // FINISH TEST
+        // FINISH TEST - CÁLCULO REVISADO
         function finishMonitoring(i) {
             document.getElementById(`pulse${i}`).style.display = "none";
 
@@ -322,23 +404,26 @@
             document.getElementById(`fc${i}`).textContent = meanHR;
             document.getElementById(`rr${i}`).textContent = meanRR;
 
-            // Score fixed scale (athletes)
-            // NOVO CÁLCULO PRONTIDÃO CIENTE IE
+            // ===== NOVO CÁLCULO REVISADO PARA ATLETAS =====
             let score;
+
             if (ln < 3.0) {
-                score = 10 + ((ln - 2.0) * 20); // Ajuste linear entre 10–30
-            }
+                score = 10 + ((ln - 2.0) * 20); // 10-30
+            } 
             else if (ln < 4.0) {
-                score = 30 + ((ln - 3.0) * 30); // 30–60
-            }
-            else if (ln < 5.5) {
-                score = 60 + ((ln - 4.0) * 25); // 60–85
-            }
+                score = 30 + ((ln - 3.0) * 25); // 30-55
+            } 
+            else if (ln < 5.0) {
+                score = 55 + ((ln - 4.0) * 20); // 55-75
+            } 
+            else if (ln < 6.0) {
+                score = 75 + ((ln - 5.0) * 15); // 75-90
+            } 
             else {
-                score = 85 + Math.min((ln - 5.5) * 15, 10); // Teto 95
+                score = 90 + Math.min((ln - 6.0) * 5, 5); // 90-95
             }
 
-            score = Math.round(Math.max(10, Math.min(score, 95))); // Limites de segurança
+            score = Math.round(Math.max(10, Math.min(score, 95)));
 
             let circle = document.getElementById(`circle${i}`);
             let interp = document.getElementById(`interp${i}`);
@@ -350,21 +435,33 @@
                 circle.style.visibility =
                 interp.style.visibility = "visible";
 
-            // Score category + colors
+            // ===== NOVAS INTERPRETAÇÕES =====
+            let interpretation = "";
+            let color = "";
+
             if (score <= 30) {
-                circle.style.background = "#d60000";
-                interp.textContent = "Baixa Recuperação";
-            } else if (score <= 60) {
-                circle.style.background = "#ff7f00";
-                interp.textContent = "Recuperação Moderada";
-            } else if (score <= 80) {
-                circle.style.background = "#87c440";
-                interp.textContent = "Boa Recuperação";
-            } else {
-                circle.style.background = "#008f14";
-                interp.textContent = "Muito Boa Recuperação";
+                interpretation = "⚠️ ALERTA: Descansar";
+                color = "#d60000";
+            } 
+            else if (score <= 55) {
+                interpretation = "🔶 Treino Leve";
+                color = "#ff7f00";
+            } 
+            else if (score <= 75) {
+                interpretation = "🟡 Treino Normal";
+                color = "#ffcc00";
+            } 
+            else if (score <= 90) {
+                interpretation = "✅ Bom - Treino Intenso";
+                color = "#87c440";
+            } 
+            else {
+                interpretation = "🏆 Excelente - Pronto para Competir";
+                color = "#008f14";
             }
 
+            circle.style.background = color;
+            interp.textContent = interpretation;
             circle.textContent = score;
 
             saveCSV(i);
@@ -405,7 +502,6 @@
         // Register service worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // IMPORTANTE: Caminho relativo à raiz do repositório
                 navigator.serviceWorker.register('service-worker.js')
                     .then(registration => {
                         console.log('Service Worker registrado com sucesso:', registration.scope);
@@ -415,6 +511,57 @@
                     });
             });
         }
+
+        // Botão para instalação desktop
+        let deferredPrompt;
+        const installBtn = document.createElement('button');
+        installBtn.innerHTML = '📦 Instalar no PC';
+        installBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        `;
+        document.body.appendChild(installBtn);
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'flex';
+            
+            installBtn.onclick = async () => {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Usuário ${outcome} a instalação`);
+                deferredPrompt = null;
+            };
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+        });
+
+        // Esconde após 30 segundos
+        setTimeout(() => {
+            if (installBtn.style.display === 'flex') {
+                installBtn.style.opacity = '0';
+                setTimeout(() => {
+                    installBtn.style.display = 'none';
+                }, 500);
+            }
+        }, 30000);
     </script>
 </body>
 </html>
