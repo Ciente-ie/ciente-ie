@@ -11,19 +11,21 @@
         :root {
             --app-height: 100vh;
             --vh: 1vh;
-            --version: '2.3';
+            --version: '2.4';
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background: #eef1f3;
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             color: #222;
             min-height: 100vh;
             display: flex;
@@ -35,9 +37,9 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
-            margin: 0 0 20px 0;
+            margin: 5px 0 15px 0;
             color: #1a1a1a;
             text-align: center;
             width: 100%;
@@ -48,33 +50,33 @@
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 12px;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             justify-content: center;
-            align-items: flex-start;
+            align-items: stretch;
         }
 
         .card {
             background: #ffffff;
-            border-radius: 12px;
-            padding: 18px;
-            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #ccc;
             display: flex;
-            gap: 20px;
-            transition: all 0.3s ease;
-            width: calc(50% - 10px);
-            max-width: 580px;
-            min-width: 380px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            gap: 12px;
+            transition: all 0.2s ease;
+            width: calc(50% - 6px);
+            max-width: 480px;
+            min-width: 300px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
             flex-shrink: 0;
             height: fit-content;
         }
 
-        /* LADO ESQUERDO COMPACTO */
+        /* LADO ESQUERDO - SUPER COMPACTO */
         .left {
-            width: 180px; /* FIXO E COMPACTO */
+            width: 130px; /* BEM PEQUENO! */
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
@@ -82,29 +84,30 @@
 
         .left select {
             width: 100%;
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            margin-bottom: 12px;
-            font-size: 14px;
+            padding: 6px 8px;
+            border-radius: 5px;
+            border: 1px solid #bbb;
+            margin-bottom: 8px;
+            font-size: 13px;
             background: white;
-            height: 38px;
+            height: 34px;
+            font-weight: 500;
         }
 
         .left button {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
-            margin-bottom: 10px;
-            min-height: 40px;
+            margin-bottom: 8px;
+            min-height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .connect { background: #007bff; color:#fff; }
@@ -114,345 +117,355 @@
         .finish { background: #d91b61; color:white; display:none; }
 
         .status {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 8px;
             color: #222;
-            min-height: 20px;
-            padding: 6px 8px;
+            padding: 5px;
             background: #f8f9fa;
-            border-radius: 6px;
+            border-radius: 5px;
             text-align: center;
+            line-height: 1.2;
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* LADO DIREITO - DADOS E CÍRCULO NA MESMA LINHA */
+        /* LADO DIREITO - DADOS E CÍRCULO LADO A LADO */
         .right {
-            width: calc(100% - 200px);
+            width: calc(100% - 142px);
             display: flex;
             flex-direction: column;
         }
 
-        .right-top {
+        .data-row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            gap: 15px;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 10px;
         }
 
         .live-data {
             flex: 1;
-            min-width: 150px;
         }
 
         .live-data p {
-            margin: 0 0 8px 0;
-            font-size: 15px;
+            margin: 0 0 5px 0;
+            font-size: 14px;
             font-weight: 600;
         }
 
         .live-data span {
             font-weight: 700;
-            font-size: 18px;
+            font-size: 16px;
             color: #007bff;
         }
 
-        .pulseRow {
-            display: none;
-            gap: 5px;
-            align-items: flex-end;
-            height: 40px;
-            justify-content: center;
-            margin: 10px 0;
-        }
-
-        .pulseBar {
-            width: 10px;
-            height: 25px;
-            background: #ff2b2b;
-            animation: pulse 0.7s ease-in-out infinite alternate;
-            border-radius: 3px 3px 0 0;
-        }
-
-        @keyframes pulse {
-            0% { height: 12px; opacity: 0.6; }
-            100% { height: 40px; opacity: 1; }
-        }
-
-        /* CÍRCULO DE SCORE */
         .score-circle-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 140px;
+            min-width: 110px;
         }
 
         .scoreCircle {
-            width: 110px;
-            height: 110px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 800;
             display: flex;
             justify-content: center;
             align-items: center;
             visibility: hidden;
             color: #fff;
-            box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
-            transition: all 0.4s ease;
-            border: 3px solid white;
-            margin-bottom: 8px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            border: 2px solid white;
+            margin-bottom: 5px;
         }
 
         .interp {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 700;
             visibility: hidden;
             text-align: center;
             line-height: 1.2;
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 5px 8px;
+            border-radius: 6px;
             background: rgba(255,255,255,0.9);
-            min-height: 40px;
+            min-height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
+            max-width: 110px;
+        }
+
+        /* ECG animation */
+        .pulseRow {
+            display: none;
+            gap: 4px;
+            align-items: flex-end;
+            height: 30px;
+            justify-content: center;
+            margin: 8px 0;
+        }
+
+        .pulseBar {
+            width: 8px;
+            height: 20px;
+            background: #ff2b2b;
+            animation: pulse 0.7s ease-in-out infinite alternate;
+            border-radius: 2px 2px 0 0;
+        }
+
+        @keyframes pulse {
+            0% { height: 8px; opacity: 0.6; }
+            100% { height: 25px; opacity: 1; }
         }
 
         /* RESULTADOS (abaixo) */
         .results {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             visibility: hidden;
-            line-height: 1.4;
+            line-height: 1.3;
             text-align: left;
-            padding: 10px;
+            padding: 8px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         /* Hover effects */
         button:hover { filter: brightness(0.92); }
         button:active { transform: scale(0.97); }
 
-        /* MOBILE (até 767px) */
+        /* MOBILE (até 767px) - EMPILHA */
         @media (max-width: 767px) {
             body {
-                padding: 10px;
+                padding: 8px;
             }
             
             #athletes {
                 flex-direction: column;
-                gap: 15px;
+                gap: 10px;
                 align-items: center;
             }
             
             .card {
                 width: 100% !important;
-                max-width: 100% !important;
+                max-width: 95% !important;
                 min-width: unset !important;
                 flex-direction: column;
-                padding: 15px;
-                margin-bottom: 0;
+                padding: 10px;
             }
             
             .left {
                 width: 100% !important;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
             }
             
             .right {
                 width: 100% !important;
             }
             
-            .right-top {
+            .data-row {
                 flex-direction: column;
-                align-items: center;
-                gap: 15px;
-            }
-            
-            .live-data {
-                width: 100%;
-                text-align: center;
+                gap: 10px;
             }
             
             .scoreCircle {
-                width: 100px;
-                height: 100px;
-                font-size: 28px;
+                width: 80px;
+                height: 80px;
+                font-size: 24px;
             }
             
             h1 {
-                font-size: 22px;
-                margin-bottom: 15px;
+                font-size: 18px;
+                margin-bottom: 12px;
             }
         }
 
         /* TABLET (768px a 1024px) */
         @media (min-width: 768px) and (max-width: 1024px) {
             .card {
-                width: calc(50% - 10px);
-                min-width: 350px;
-                padding: 15px;
-                gap: 15px;
+                width: calc(50% - 6px);
+                min-width: 320px;
+                padding: 10px;
+                gap: 10px;
             }
             
             .left {
-                width: 160px;
+                width: 120px;
             }
             
             .right {
-                width: calc(100% - 175px);
+                width: calc(100% - 130px);
             }
             
             .scoreCircle {
-                width: 100px;
-                height: 100px;
-                font-size: 30px;
+                width: 85px;
+                height: 85px;
+                font-size: 24px;
             }
             
             .interp {
-                font-size: 13px;
-                padding: 5px 8px;
+                font-size: 11px;
+                padding: 4px 6px;
             }
         }
 
         /* DESKTOP (1025px+) */
         @media (min-width: 1025px) {
             body {
-                padding: 20px;
+                padding: 15px;
             }
             
             #athletes {
-                gap: 25px;
-                max-width: 1300px;
+                gap: 15px;
+                max-width: 1100px;
             }
             
             .card {
-                width: calc(50% - 12px);
-                max-width: 600px;
-                min-width: 400px;
-                padding: 20px;
+                width: calc(50% - 8px);
+                max-width: 500px;
+                min-width: 350px;
+                padding: 14px;
             }
             
             .left {
-                width: 180px;
+                width: 130px;
             }
             
             .right {
-                width: calc(100% - 200px);
+                width: calc(100% - 142px);
             }
             
             .scoreCircle {
-                width: 120px;
-                height: 120px;
-                font-size: 34px;
+                width: 95px;
+                height: 95px;
+                font-size: 28px;
             }
             
             h1 {
-                font-size: 26px;
-                margin-bottom: 25px;
+                font-size: 22px;
+                margin-bottom: 20px;
             }
         }
 
         /* LANDSCAPE ESPECÍFICO */
         @media (orientation: landscape) and (max-height: 600px) {
-            body {
-                padding: 10px;
-            }
-            
             .card {
-                padding: 12px;
-                gap: 12px;
-                min-width: 350px;
+                padding: 10px;
+                gap: 10px;
+                min-width: 320px;
             }
             
             .scoreCircle {
-                width: 90px;
-                height: 90px;
-                font-size: 26px;
+                width: 80px;
+                height: 80px;
+                font-size: 22px;
             }
             
             button, select {
-                min-height: 36px;
-                padding: 8px;
-                font-size: 13px;
+                min-height: 34px;
+                padding: 7px;
+                font-size: 12px;
+            }
+            
+            .left {
+                width: 120px;
             }
         }
 
-        /* BOTÃO DE ATUALIZAÇÃO (ESCONDIDO POR PADRÃO) */
+        /* BOTÃO DE ATUALIZAÇÃO MINÚSCULO */
         .update-button {
             position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: #6c757d;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            border: none;
-            font-size: 11px;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(108, 117, 125, 0.2);
+            color: #666;
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            font-size: 10px;
             cursor: pointer;
             z-index: 1000;
-            opacity: 0.7;
             display: none;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             transition: all 0.3s ease;
         }
 
         .update-button:hover {
-            opacity: 1;
-            background: #5a6268;
+            background: rgba(108, 117, 125, 0.3);
         }
 
-        /* TOAST DE ATUALIZAÇÃO */
+        /* TOAST DE ATUALIZAÇÃO MINÚSCULO */
         .update-toast {
             position: fixed;
-            top: 15px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             background: #17a2b8;
             color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 16px;
             z-index: 10000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
             display: none;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             animation: slideDown 0.3s ease;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         @keyframes slideDown {
-            from { top: -50px; opacity: 0; }
-            to { top: 15px; opacity: 1; }
+            from { top: -40px; opacity: 0; }
+            to { top: 10px; opacity: 1; }
         }
 
-        /* VERSÃO INFO */
+        /* VERSÃO INFO MÍNIMA */
         .version-info {
             position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 10px;
-            color: #888;
+            top: 8px;
+            right: 8px;
+            font-size: 9px;
+            color: #999;
             background: rgba(255,255,255,0.9);
-            padding: 3px 8px;
-            border-radius: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
             z-index: 999;
             border: 1px solid #eee;
             font-family: monospace;
+        }
+
+        /* AJUSTE ESPECIAL PARA VISUALIZAR 2 ATLETAS */
+        @media (min-width: 768px) {
+            .card {
+                height: auto;
+                min-height: 220px;
+            }
+            
+            .data-row {
+                align-items: flex-start;
+            }
+            
+            .interp {
+                min-height: 40px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="version-info">v2.3</div>
+    <div class="version-info">v2.4</div>
     <div class="update-toast" id="updateToast">
         <span>🔄 Nova versão!</span>
-        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:3px 10px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">
+        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:2px 8px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px;">
             Atualizar
         </button>
     </div>
@@ -462,7 +475,7 @@
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        const APP_VERSION = '2.3';
+        const APP_VERSION = '2.4';
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -493,7 +506,7 @@
                                 toast.style.opacity = '1';
                             }, 500);
                         }
-                    }, 10000);
+                    }, 8000);
                     
                     return true;
                 }
@@ -521,46 +534,6 @@
                             });
                         });
                     });
-                
-                if (window.location.search.includes('forceUpdate=1')) {
-                    navigator.serviceWorker.getRegistrations().then(regs => {
-                        regs.forEach(reg => reg.unregister());
-                        caches.keys().then(keys => {
-                            keys.forEach(key => caches.delete(key));
-                            setTimeout(() => window.location.reload(), 1000);
-                        });
-                    });
-                }
-            }
-        }
-
-        // ===== AJUSTE DE LAYOUT =====
-        function adjustLayout() {
-            const width = window.innerWidth;
-            const athletesContainer = document.getElementById('athletes');
-            const cards = document.querySelectorAll('.card');
-            
-            if (!athletesContainer || cards.length === 0) return;
-            
-            if (width <= 767) {
-                athletesContainer.style.flexDirection = 'column';
-                athletesContainer.style.alignItems = 'center';
-                
-                cards.forEach(card => {
-                    card.style.width = '100%';
-                    card.style.flexDirection = 'column';
-                });
-            } else {
-                athletesContainer.style.flexDirection = 'row';
-                athletesContainer.style.flexWrap = 'wrap';
-                athletesContainer.style.justifyContent = 'center';
-                
-                const cardWidth = width < 1024 ? 'calc(50% - 10px)' : 'calc(50% - 12px)';
-                
-                cards.forEach(card => {
-                    card.style.width = cardWidth;
-                    card.style.flexDirection = 'row';
-                });
             }
         }
 
@@ -582,7 +555,7 @@
                         <p id="status${i}" class="status">Aguardando...</p>
                     </div>
                     <div class="right">
-                        <div class="right-top">
+                        <div class="data-row">
                             <div class="live-data">
                                 <p><b>FC:</b> <span id="fc${i}">--</span> bpm</p>
                                 <p><b>RR:</b> <span id="rr${i}">--</span> ms</p>
@@ -609,8 +582,6 @@
                 
                 document.getElementById(`start${i}`).disabled = true;
             }
-            
-            adjustLayout();
         }
 
         // ===== BLUETOOTH =====
@@ -666,8 +637,8 @@
             let timer = setInterval(() => {
                 t--;
                 setStatus(i, t > MONITOR_TIME ? 
-                    `Calibrando... (${t - MONITOR_TIME}s)` : 
-                    `Analisando... (${t}s)`);
+                    `Calibrando (${t - MONITOR_TIME}s)` : 
+                    `Analisando (${t}s)`);
 
                 if (t <= 0) {
                     clearInterval(timer);
@@ -724,28 +695,28 @@
             results.innerHTML = `lnRMSSD: ${ln}<br>RR Médio: ${meanRR} ms`;
             results.style.visibility = circle.style.visibility = interp.style.visibility = "visible";
 
-            // NOVAS LEGENDAS
+            // LEGENDAS
             let interpretation = "";
             let color = "";
 
             if (score <= 30) {
-                interpretation = "⚠️ Recuperação Muito Baixa";
+                interpretation = "⚠️ Rec. Muito Baixa";
                 color = "#d60000";
             } 
             else if (score <= 55) {
-                interpretation = "🔶 Recuperação Baixa";
+                interpretation = "🔶 Rec. Baixa";
                 color = "#ff7f00";
             } 
             else if (score <= 75) {
-                interpretation = "🟡 Recuperação Moderada";
+                interpretation = "🟡 Rec. Moderada";
                 color = "#ffcc00";
             } 
             else if (score <= 90) {
-                interpretation = "✅ Recuperação Boa";
+                interpretation = "✅ Rec. Boa";
                 color = "#87c440";
             } 
             else {
-                interpretation = "🏆 Recuperação Excelente";
+                interpretation = "🏆 Rec. Excelente";
                 color = "#008f14";
             }
 
@@ -803,13 +774,8 @@
             setTimeout(checkForUpdates, 10000);
             setInterval(checkForUpdates, 5 * 60 * 1000);
             
-            window.addEventListener('resize', adjustLayout);
-            window.addEventListener('orientationchange', () => {
-                setTimeout(adjustLayout, 300);
-            });
-            
             // Botão de atualização apenas em desktop
-            if (window.innerWidth > 1024) {
+            if (window.innerWidth > 768) {
                 const updateBtn = document.createElement('button');
                 updateBtn.className = 'update-button';
                 updateBtn.innerHTML = '🔄';
