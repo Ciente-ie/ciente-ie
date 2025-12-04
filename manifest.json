@@ -1,7 +1,7 @@
 {
-  "name": "Ciente - Prontidão HRV",
-  "short_name": "Prontidão HRV",
-  "start_url": ".",
+  "name": "Ciente - Prontidão Fisiológica HRV",
+  "short_name": "Ciente HRV",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
@@ -17,5 +17,6 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "description": "Sistema de monitoramento de prontidão fisiológica via HRV para 4 atletas simultâneos"
 }
