@@ -2,18 +2,38 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#007bff">
     <link rel="manifest" href="manifest.json">
     <title>Ciente - Prontidão HRV</title>
 
     <style>
+        :root {
+            --app-height: 100vh;
+            --vh: 1vh;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background: #eef1f3;
             margin: 0;
             padding: 20px;
             color: #222;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body.tablet-mode {
+            height: calc(var(--app-height, 100vh) - 40px);
+            min-height: calc(var(--app-height, 100vh) - 40px);
         }
 
         h1 {
@@ -22,6 +42,7 @@
             margin-bottom: 25px;
             color: #1a1a1a;
             text-align: center;
+            width: 100%;
         }
 
         .card {
@@ -35,6 +56,7 @@
             display: flex;
             justify-content: space-between;
             gap: 32px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
@@ -58,30 +80,36 @@
 
         select {
             width: fit-content;
-            padding: 6px;
+            padding: 8px 10px;
             border-radius: 6px;
             border: 1px solid #ccc;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 15px;
+            background: white;
+            min-height: 44px;
         }
 
         button {
             width: 170px;
-            padding: 12px;
+            padding: 14px;
             border: none;
             border-radius: 10px;
             font-weight: 700;
             font-size: 15px;
             cursor: pointer;
             margin-bottom: 14px;
-            transition: 0.15s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .connect { background: #007bff; color:#fff; }
         .connect.connected { background: #009b2e !important; }
 
         .start { background: #ff9800; color:white; }
-        .start:disabled { background: #c77b00; cursor: default; }
+        .start:disabled { background: #c77b00; cursor: default; opacity: 0.7; }
 
         .finish { background: #d91b61; color:white; display:none; }
         .finish:hover { background: #c61356; }
@@ -91,6 +119,7 @@
             font-weight: bold;
             margin-top: 12px;
             color: #222;
+            min-height: 24px;
         }
 
         /* ECG animation */
@@ -99,6 +128,7 @@
             gap: 6px;
             align-items: flex-end;
             height: 50px;
+            justify-content: center;
         }
 
         .pulseBar {
@@ -118,6 +148,7 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
+            align-items: center;
         }
 
         .scoreData {
@@ -144,6 +175,7 @@
             visibility: hidden;
             color: #fff;
             box-shadow: 0px 0px 25px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
         }
 
         .interp {
@@ -152,6 +184,7 @@
             visibility: hidden;
             text-align: left;
             max-width: 200px;
+            line-height: 1.3;
         }
 
         .results {
@@ -159,29 +192,79 @@
             font-weight: 600;
             margin-top: 14px;
             visibility: hidden;
+            line-height: 1.4;
         }
 
-        /* Tablet */
-        @media (max-width: 1180px) {
+        /* Hover effects */
+        button:hover { filter: brightness(0.95); }
+        button:active { transform: scale(0.98); }
+
+        /* Tablet (768px a 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            body {
+                padding: 15px;
+                justify-content: flex-start;
+            }
+            
             .card {
-                max-width: 850px;
-                padding: 18px 20px;
-                gap: 26px;
+                max-width: 95%;
+                flex-direction: row;
+                gap: 25px;
+                padding: 20px;
+                margin: 20px auto;
             }
-            .scoreCircle {
-                width: 135px;
-                height: 135px;
-                font-size: 38px;
+            
+            .left, .right {
+                width: 48%;
             }
+            
             button {
-                width: 155px;
+                padding: 14px;
+                font-size: 16px;
+                min-height: 50px;
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            select {
+                font-size: 16px;
+                padding: 10px;
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .scoreCircle {
+                width: 140px;
+                height: 140px;
+                font-size: 40px;
             }
         }
 
-        /* Mobile - Responsividade para ambas orientações */
-        @media (max-width: 768px) {
+        /* Tablets grandes (1025px a 1366px) */
+        @media (min-width: 1025px) and (max-width: 1366px) {
+            .card {
+                max-width: 1100px;
+                margin: 30px auto;
+                padding: 25px 30px;
+            }
+            
+            .scoreCircle {
+                width: 160px;
+                height: 160px;
+                font-size: 42px;
+            }
+            
+            h1 {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+        }
+
+        /* Mobile (até 767px) */
+        @media (max-width: 767px) {
             body {
                 padding: 15px 10px;
+                min-height: -webkit-fill-available;
             }
             
             .card {
@@ -189,6 +272,7 @@
                 gap: 20px;
                 padding: 15px;
                 margin-bottom: 20px;
+                max-width: 100%;
             }
             
             .left, .right {
@@ -208,18 +292,19 @@
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                gap: 15px;
             }
             
             .scoreContainer {
                 flex-direction: column;
                 gap: 15px;
-                margin-top: 15px;
+                margin-top: 10px;
             }
             
             .scoreCircle {
-                width: 120px;
-                height: 120px;
-                font-size: 36px;
+                width: 130px;
+                height: 130px;
+                font-size: 38px;
             }
             
             .pulseRow {
@@ -229,15 +314,31 @@
             
             select, button {
                 width: 100%;
-                max-width: 250px;
+                max-width: 280px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            button {
+                min-height: 50px;
+            }
+            
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
             }
         }
 
         /* Orientação landscape em mobile */
         @media (orientation: landscape) and (max-height: 600px) {
+            body {
+                padding: 10px;
+            }
+            
             .card {
                 padding: 12px 16px;
-                gap: 20px;
+                gap: 15px;
+                margin-bottom: 15px;
             }
             
             h1 {
@@ -255,20 +356,80 @@
                 width: 140px;
                 padding: 10px;
                 font-size: 14px;
+                min-height: 44px;
+            }
+            
+            select {
+                padding: 6px;
+                font-size: 14px;
+                min-height: 40px;
             }
         }
 
-        /* Hover */
-        button:hover { filter: brightness(0.95); }
+        /* Desktop grande */
+        @media (min-width: 1367px) {
+            body {
+                padding: 30px;
+            }
+            
+            .card {
+                max-width: 1200px;
+                padding: 30px 35px;
+                margin: 25px auto;
+            }
+            
+            .scoreCircle {
+                width: 170px;
+                height: 170px;
+                font-size: 48px;
+            }
+            
+            h1 {
+                font-size: 36px;
+                margin-bottom: 35px;
+            }
+        }
+
+        /* Correção para iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* Dispositivos touch */
+        @media (hover: none) and (pointer: coarse) {
+            button:active {
+                transform: scale(0.96);
+            }
+            
+            select {
+                font-size: 16px;
+            }
+        }
+
+        /* Versão info */
+        .version-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+            background: rgba(255,255,255,0.9);
+            padding: 4px 8px;
+            border-radius: 4px;
+            z-index: 1000;
+        }
     </style>
 </head>
 
 <body>
+    <div class="version-info">v2.1</div>
     <h1>🏥 Ciente - Prontidão HRV</h1>
     <div id="athletes"></div>
 
     <script>
-        // CONFIG
+        // ===== CONFIGURAÇÕES =====
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -278,6 +439,39 @@
         let currentIndex = 0;
         let heartChar = null;
 
+        // ===== DETECÇÃO DE DISPOSITIVO =====
+        function isTablet() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const isIpad = /iPad/.test(navigator.userAgent);
+            const isAndroidTablet = /Android/.test(navigator.userAgent) && width >= 768;
+            return (width >= 768 && width <= 1024) || isIpad || isAndroidTablet;
+        }
+
+        // ===== CORREÇÕES PARA TABLET =====
+        function applyTabletFixes() {
+            if (!isTablet()) return;
+            
+            console.log('Aplicando correções para tablet...');
+            document.body.classList.add('tablet-mode');
+            
+            // Destrava orientação
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock().catch(() => {
+                    console.log('Orientação já destravada');
+                });
+            }
+            
+            // Ajusta altura
+            const appHeight = () => {
+                const doc = document.documentElement;
+                doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+            };
+            window.addEventListener('resize', appHeight);
+            appHeight();
+        }
+
+        // ===== CONSTRUIR INTERFACE =====
         function buildUI() {
             const container = document.getElementById("athletes");
 
@@ -288,10 +482,10 @@
                         <select id="athleteSelect${i}">
                             ${athletesList.map(a => `<option>${a}</option>`)}
                         </select>
-                        <button id="connect${i}" class="connect">Conectar</button>
-                        <button id="start${i}" class="start" disabled>Iniciar</button>
-                        <button id="finish${i}" class="finish">Finalizar</button>
-                        <p id="status${i}" class="status">Aguardando...</p>
+                        <button id="connect${i}" class="connect">📶 Conectar</button>
+                        <button id="start${i}" class="start">▶️ Iniciar</button>
+                        <button id="finish${i}" class="finish">⏹️ Finalizar</button>
+                        <p id="status${i}" class="status">Aguardando conexão...</p>
                     </div>
                     <div class="right">
                         <div class="scoreSection">
@@ -318,11 +512,13 @@
                 document.getElementById(`connect${i}`).onclick = () => connectPolar(i);
                 document.getElementById(`start${i}`).onclick = () => startMonitoring(i);
                 document.getElementById(`finish${i}`).onclick = () => resetUI(i);
+                
+                // Inicialmente desabilita iniciar
+                document.getElementById(`start${i}`).disabled = true;
             }
         }
-        buildUI();
 
-        // BLUETOOTH
+        // ===== BLUETOOTH =====
         async function connectPolar(i) {
             try {
                 const device = await navigator.bluetooth.requestDevice({
@@ -336,18 +532,18 @@
                 heartChar.addEventListener("characteristicvaluechanged", parseHR);
                 currentIndex = i;
 
-                setStatus(i, "Conectado!");
+                setStatus(i, "✅ Conectado!");
                 document.getElementById(`connect${i}`).classList.add("connected");
-                document.getElementById(`connect${i}`).innerText = "Conectado";
+                document.getElementById(`connect${i}`).innerHTML = "✅ Conectado";
                 document.getElementById(`start${i}`).disabled = false;
 
             } catch (err) {
-                setStatus(i, "Erro ao conectar");
+                setStatus(i, "❌ Erro ao conectar");
                 console.error("Erro Bluetooth:", err);
             }
         }
 
-        // HR parsing
+        // ===== PARSE HR =====
         function parseHR(e) {
             const v = e.target.value;
             if (!v) return;
@@ -363,18 +559,21 @@
             }
         }
 
-        // Monitoring
+        // ===== MONITORAMENTO =====
         function startMonitoring(i) {
             rrData = []; hrData = [];
             currentIndex = i;
-            setStatus(i, "Calibrando...");
+            setStatus(i, "🔧 Calibrando...");
             document.getElementById(`pulse${i}`).style.display = "flex";
             document.getElementById(`start${i}`).disabled = true;
+            document.getElementById(`connect${i}`).disabled = true;
 
             let t = CALIBRATION + MONITOR_TIME;
             let timer = setInterval(() => {
                 t--;
-                setStatus(i, t > MONITOR_TIME ? `Calibrando... (${t - MONITOR_TIME}s)` : `Analisando... (${t}s)`);
+                setStatus(i, t > MONITOR_TIME ? 
+                    `🔧 Calibrando... (${t - MONITOR_TIME}s)` : 
+                    `📊 Analisando... (${t}s)`);
 
                 if (t <= 0) {
                     clearInterval(timer);
@@ -386,14 +585,14 @@
             }, 1000);
         }
 
-        // lnRMSSD calc
+        // ===== CÁLCULO lnRMSSD =====
         function calcLnRR(rr) {
             if (rr.length < 3) return 0;
             let diffs = rr.slice(1).map((v, i) => (v - rr[i]) ** 2);
             return +(Math.log(Math.sqrt(diffs.reduce((a, b) => a + b) / diffs.length))).toFixed(2);
         }
 
-        // FINISH TEST - CÁLCULO REVISADO
+        // ===== FINALIZAR TESTE - CÁLCULO REVISADO =====
         function finishMonitoring(i) {
             document.getElementById(`pulse${i}`).style.display = "none";
 
@@ -404,23 +603,22 @@
             document.getElementById(`fc${i}`).textContent = meanHR;
             document.getElementById(`rr${i}`).textContent = meanRR;
 
-            // ===== NOVO CÁLCULO REVISADO PARA ATLETAS =====
+            // ===== NOVO CÁLCULO REVISADO =====
             let score;
-
             if (ln < 3.0) {
-                score = 10 + ((ln - 2.0) * 20); // 10-30
+                score = 10 + ((ln - 2.0) * 20);
             } 
             else if (ln < 4.0) {
-                score = 30 + ((ln - 3.0) * 25); // 30-55
+                score = 30 + ((ln - 3.0) * 25);
             } 
             else if (ln < 5.0) {
-                score = 55 + ((ln - 4.0) * 20); // 55-75
+                score = 55 + ((ln - 4.0) * 20);
             } 
             else if (ln < 6.0) {
-                score = 75 + ((ln - 5.0) * 15); // 75-90
+                score = 75 + ((ln - 5.0) * 15);
             } 
             else {
-                score = 90 + Math.min((ln - 6.0) * 5, 5); // 90-95
+                score = 90 + Math.min((ln - 6.0) * 5, 5);
             }
 
             score = Math.round(Math.max(10, Math.min(score, 95)));
@@ -429,11 +627,9 @@
             let interp = document.getElementById(`interp${i}`);
             let results = document.getElementById(`results${i}`);
 
-            // Results display
+            // Exibir resultados
             results.innerHTML = `lnRMSSD: ${ln}<br>RR Médio: ${meanRR} ms`;
-            results.style.visibility =
-                circle.style.visibility =
-                interp.style.visibility = "visible";
+            results.style.visibility = circle.style.visibility = interp.style.visibility = "visible";
 
             // ===== NOVAS INTERPRETAÇÕES =====
             let interpretation = "";
@@ -466,21 +662,22 @@
 
             saveCSV(i);
             document.getElementById(`finish${i}`).style.display = "block";
-            setStatus(i, "Concluído!");
+            document.getElementById(`connect${i}`).disabled = false;
+            setStatus(i, "✅ Concluído!");
         }
 
-        // Save RR CSV
+        // ===== SALVAR CSV =====
         function saveCSV(i) {
             if (rrData.length < 3) return;
             let athlete = document.getElementById(`athleteSelect${i}`).value;
             let csv = "RR\n" + rrData.join("\n");
             let a = document.createElement("a");
             a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-            a.download = `${athlete}_HRV.csv`;
+            a.download = `${athlete}_HRV_${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
         }
 
-        // Reset UI
+        // ===== RESET UI =====
         function resetUI(i) {
             rrData = []; hrData = [];
             document.getElementById(`pulse${i}`).style.display = "none";
@@ -489,79 +686,207 @@
             document.getElementById(`results${i}`).style.visibility = "hidden";
             document.getElementById(`start${i}`).disabled = false;
             document.getElementById(`finish${i}`).style.display = "none";
+            document.getElementById(`connect${i}`).disabled = false;
             document.getElementById(`fc${i}`).textContent = "--";
             document.getElementById(`rr${i}`).textContent = "--";
             setStatus(i, "Aguardando...");
         }
 
-        // Set status
+        // ===== SET STATUS =====
         function setStatus(i, m) {
             document.getElementById(`status${i}`).textContent = m;
         }
 
-        // Register service worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registrado com sucesso:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Falha ao registrar Service Worker:', error);
-                    });
+        // ===== BOTÃO INSTALAÇÃO DESKTOP =====
+        function setupInstallButton() {
+            let deferredPrompt;
+            const installBtn = document.createElement('button');
+            installBtn.innerHTML = '📦 Instalar no PC';
+            installBtn.id = 'installBtn';
+            installBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #007bff;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 25px;
+                border: none;
+                font-size: 14px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+            `;
+            document.body.appendChild(installBtn);
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'flex';
+                
+                installBtn.onclick = async () => {
+                    installBtn.style.display = 'none';
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`Usuário ${outcome} a instalação`);
+                    deferredPrompt = null;
+                };
+            });
+
+            window.addEventListener('appinstalled', () => {
+                installBtn.style.display = 'none';
+            });
+
+            // Esconde após 30 segundos
+            setTimeout(() => {
+                if (installBtn.style.display === 'flex') {
+                    installBtn.style.opacity = '0';
+                    setTimeout(() => {
+                        installBtn.style.display = 'none';
+                    }, 500);
+                }
+            }, 30000);
+        }
+
+        // ===== SERVICE WORKER =====
+        function setupServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                // Limpa service workers antigos
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+
+                // Registra novo
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('service-worker.js?v=2.1')
+                        .then(registration => {
+                            console.log('✅ Service Worker registrado:', registration.scope);
+                            
+                            // Verifica atualizações
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        console.log('Nova versão disponível!');
+                                        if (confirm('Nova versão disponível! Recarregar agora?')) {
+                                            window.location.reload();
+                                        }
+                                    }
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.log('❌ Erro Service Worker:', error);
+                        });
+                });
+            }
+        }
+
+        // ===== ORIENTAÇÃO CHANGE =====
+        function setupOrientationHandler() {
+            window.addEventListener('orientationchange', () => {
+                console.log('Orientação mudou:', screen.orientation.type);
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 100);
             });
         }
 
-        // Botão para instalação desktop
-        let deferredPrompt;
-        const installBtn = document.createElement('button');
-        installBtn.innerHTML = '📦 Instalar no PC';
-        installBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            gap: 8px;
-        `;
-        document.body.appendChild(installBtn);
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'flex';
+        // ===== BOTÃO CORREÇÃO TABLET =====
+        function addTabletFixButton() {
+            if (!isTablet()) return;
             
-            installBtn.onclick = async () => {
-                installBtn.style.display = 'none';
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`Usuário ${outcome} a instalação`);
-                deferredPrompt = null;
+            const fixBtn = document.createElement('button');
+            fixBtn.innerHTML = '🔄 Ajustar Tablet';
+            fixBtn.style.cssText = `
+                position: fixed;
+                bottom: 70px;
+                right: 20px;
+                background: #ff9800;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 20px;
+                border: none;
+                font-size: 13px;
+                cursor: pointer;
+                z-index: 9998;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            `;
+            
+            fixBtn.onclick = function() {
+                // Limpa tudo
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(regs => {
+                        regs.forEach(reg => reg.unregister());
+                        caches.keys().then(keys => {
+                            keys.forEach(key => caches.delete(key));
+                            localStorage.setItem('tablet_fixed', 'true');
+                            window.location.reload(true);
+                        });
+                    });
+                }
             };
-        });
-
-        window.addEventListener('appinstalled', () => {
-            installBtn.style.display = 'none';
-        });
-
-        // Esconde após 30 segundos
-        setTimeout(() => {
-            if (installBtn.style.display === 'flex') {
-                installBtn.style.opacity = '0';
+            
+            document.body.appendChild(fixBtn);
+            
+            // Remove após 45 segundos
+            setTimeout(() => {
+                fixBtn.style.opacity = '0';
                 setTimeout(() => {
-                    installBtn.style.display = 'none';
+                    if (fixBtn.parentNode) {
+                        fixBtn.parentNode.removeChild(fixBtn);
+                    }
                 }, 500);
+            }, 45000);
+        }
+
+        // ===== INICIALIZAÇÃO =====
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Iniciando Ciente HRV v2.1...');
+            console.log('Dispositivo:', isTablet() ? 'Tablet' : 'Mobile/Desktop');
+            console.log('Tela:', window.innerWidth, 'x', window.innerHeight);
+            console.log('Orientação:', screen.orientation?.type || 'não disponível');
+            
+            buildUI();
+            applyTabletFixes();
+            setupServiceWorker();
+            setupInstallButton();
+            setupOrientationHandler();
+            addTabletFixButton();
+            
+            // Aplica correções se for tablet
+            if (isTablet() && !localStorage.getItem('tablet_fixed')) {
+                setTimeout(() => {
+                    if (confirm('Detectamos que está usando um tablet. Aplicar otimizações?')) {
+                        localStorage.setItem('tablet_fixed', 'true');
+                        window.location.reload();
+                    }
+                }, 2000);
             }
-        }, 30000);
+        });
+
+        // ===== FORÇAR ATUALIZAÇÃO SE PARÂMETRO =====
+        if (window.location.search.includes('force=1')) {
+            localStorage.clear();
+            sessionStorage.clear();
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    regs.forEach(reg => reg.unregister());
+                    caches.keys().then(keys => {
+                        keys.forEach(key => caches.delete(key));
+                    });
+                });
+            }
+        }
     </script>
 </body>
 </html>
