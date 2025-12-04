@@ -11,7 +11,7 @@
         :root {
             --app-height: 100vh;
             --vh: 1vh;
-            --version: '2.4';
+            --version: '2.5';
         }
 
         * {
@@ -76,7 +76,7 @@
 
         /* LADO ESQUERDO - SUPER COMPACTO */
         .left {
-            width: 130px; /* BEM PEQUENO! */
+            width: 130px;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
@@ -225,7 +225,7 @@
             100% { height: 25px; opacity: 1; }
         }
 
-        /* RESULTADOS (abaixo) */
+        /* RESULTADOS */
         .results {
             font-size: 12px;
             font-weight: 600;
@@ -356,37 +356,12 @@
             }
         }
 
-        /* LANDSCAPE ESPECÍFICO */
-        @media (orientation: landscape) and (max-height: 600px) {
-            .card {
-                padding: 10px;
-                gap: 10px;
-                min-width: 320px;
-            }
-            
-            .scoreCircle {
-                width: 80px;
-                height: 80px;
-                font-size: 22px;
-            }
-            
-            button, select {
-                min-height: 34px;
-                padding: 7px;
-                font-size: 12px;
-            }
-            
-            .left {
-                width: 120px;
-            }
-        }
-
-        /* BOTÃO DE ATUALIZAÇÃO MINÚSCULO */
-        .update-button {
+        /* BOTÃO DE LIMPEZA DE CACHE (apenas para debug) */
+        .debug-btn {
             position: fixed;
             bottom: 10px;
             right: 10px;
-            background: rgba(108, 117, 125, 0.2);
+            background: rgba(108, 117, 125, 0.1);
             color: #666;
             padding: 4px 8px;
             border-radius: 12px;
@@ -395,40 +370,9 @@
             cursor: pointer;
             z-index: 1000;
             display: none;
-            align-items: center;
-            gap: 3px;
-            transition: all 0.3s ease;
         }
 
-        .update-button:hover {
-            background: rgba(108, 117, 125, 0.3);
-        }
-
-        /* TOAST DE ATUALIZAÇÃO MINÚSCULO */
-        .update-toast {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #17a2b8;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 16px;
-            z-index: 10000;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-            display: none;
-            align-items: center;
-            gap: 8px;
-            animation: slideDown 0.3s ease;
-            font-size: 13px;
-        }
-
-        @keyframes slideDown {
-            from { top: -40px; opacity: 0; }
-            to { top: 10px; opacity: 1; }
-        }
-
-        /* VERSÃO INFO MÍNIMA */
+        /* VERSÃO INFO */
         .version-info {
             position: fixed;
             top: 8px;
@@ -442,40 +386,18 @@
             border: 1px solid #eee;
             font-family: monospace;
         }
-
-        /* AJUSTE ESPECIAL PARA VISUALIZAR 2 ATLETAS */
-        @media (min-width: 768px) {
-            .card {
-                height: auto;
-                min-height: 220px;
-            }
-            
-            .data-row {
-                align-items: flex-start;
-            }
-            
-            .interp {
-                min-height: 40px;
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div class="version-info">v2.4</div>
-    <div class="update-toast" id="updateToast">
-        <span>🔄 Nova versão!</span>
-        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:2px 8px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px;">
-            Atualizar
-        </button>
-    </div>
+    <div class="version-info">v2.5</div>
     
     <h1>🏥 Ciente - Prontidão HRV</h1>
     <div id="athletes"></div>
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        const APP_VERSION = '2.4';
+        const APP_VERSION = '2.5';
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -485,56 +407,59 @@
         let currentIndex = 0;
         let heartChar = null;
 
-        // ===== VERIFICAR ATUALIZAÇÕES =====
-        async function checkForUpdates() {
-            try {
-                const response = await fetch(`./index.html?v=${Date.now()}`);
-                const text = await response.text();
-                const versionMatch = text.match(/const APP_VERSION = ['"]([^'"]+)['"]/);
-                const serverVersion = versionMatch ? versionMatch[1] : '1.0';
-                const localVersion = localStorage.getItem('app_version') || APP_VERSION;
-                
-                if (serverVersion !== localVersion) {
-                    const toast = document.getElementById('updateToast');
-                    toast.style.display = 'flex';
+        // ===== SERVICE WORKER COM ATUALIZAÇÃO AUTOMÁTICA =====
+        function setupServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                // Remove todos os service workers antigos primeiro
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                        console.log('Service Worker antigo removido');
+                    }
                     
+                    // Aguarda 1s e registra novo
                     setTimeout(() => {
-                        if (toast.style.display === 'flex') {
-                            toast.style.opacity = '0';
-                            setTimeout(() => {
-                                toast.style.display = 'none';
-                                toast.style.opacity = '1';
-                            }, 500);
-                        }
-                    }, 8000);
-                    
-                    return true;
-                }
-                return false;
-            } catch (error) {
-                return false;
+                        navigator.serviceWorker.register('service-worker.js?v=' + APP_VERSION)
+                            .then(registration => {
+                                console.log('✅ Service Worker registrado:', registration.scope);
+                                
+                                // Força atualização imediata
+                                registration.update();
+                                
+                                // Escuta por atualizações
+                                registration.addEventListener('updatefound', () => {
+                                    const newWorker = registration.installing;
+                                    console.log('🔍 Nova versão do Service Worker encontrada');
+                                    
+                                    newWorker.addEventListener('statechange', () => {
+                                        if (newWorker.state === 'installed') {
+                                            console.log('📦 Nova versão instalada');
+                                            
+                                            // Se já tem um service worker ativo, sugere recarregar
+                                            if (navigator.serviceWorker.controller) {
+                                                if (confirm('Nova versão disponível! Recarregar agora?')) {
+                                                    window.location.reload();
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            })
+                            .catch(error => {
+                                console.error('❌ Erro ao registrar Service Worker:', error);
+                            });
+                    }, 1000);
+                });
             }
         }
 
-        // ===== ATUALIZAÇÃO AUTOMÁTICA =====
-        function setupAutoUpdate() {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js?v=' + APP_VERSION)
-                    .then(registration => {
-                        setInterval(() => {
-                            registration.update();
-                        }, 5 * 60 * 1000);
-                        
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    checkForUpdates();
-                                }
-                            });
-                        });
-                    });
-            }
+        // ===== VERIFICAR SE É TABLET =====
+        function isTablet() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const isIpad = /iPad/.test(navigator.userAgent);
+            const isAndroidTablet = /Android/.test(navigator.userAgent) && width >= 768;
+            return (width >= 768 && width <= 1024) || isIpad || isAndroidTablet;
         }
 
         // ===== CONSTRUIR INTERFACE =====
@@ -761,32 +686,87 @@
             document.getElementById(`status${i}`).textContent = m;
         }
 
+        // ===== LIMPAR CACHE MANUAL (para debug) =====
+        function clearCacheManual() {
+            if (confirm('Limpar todo o cache do app? Isso irá recarregar a página.')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(regs => {
+                        regs.forEach(reg => reg.unregister());
+                        caches.keys().then(keys => {
+                            keys.forEach(key => caches.delete(key));
+                            setTimeout(() => window.location.reload(true), 1000);
+                        });
+                    });
+                }
+            }
+        }
+
         // ===== INICIALIZAÇÃO =====
         document.addEventListener('DOMContentLoaded', () => {
-            const savedVersion = localStorage.getItem('app_version');
-            if (savedVersion !== APP_VERSION) {
-                localStorage.setItem('app_version', APP_VERSION);
-            }
+            console.log(`🚀 Iniciando Ciente HRV v${APP_VERSION}`);
+            
+            // Salva versão atual
+            localStorage.setItem('app_version', APP_VERSION);
             
             buildUI();
-            setupAutoUpdate();
+            setupServiceWorker();
             
-            setTimeout(checkForUpdates, 10000);
-            setInterval(checkForUpdates, 5 * 60 * 1000);
-            
-            // Botão de atualização apenas em desktop
-            if (window.innerWidth > 768) {
-                const updateBtn = document.createElement('button');
-                updateBtn.className = 'update-button';
-                updateBtn.innerHTML = '🔄';
-                updateBtn.title = 'Forçar atualização';
-                updateBtn.onclick = () => {
-                    if (confirm('Recarregar para verificar atualizações?')) {
-                        window.location.reload();
+            // Se for tablet, mostra instruções
+            if (isTablet()) {
+                console.log('📱 Dispositivo detectado como Tablet');
+                
+                // Instruções para instalar no tablet
+                setTimeout(() => {
+                    if (!window.matchMedia('(display-mode: standalone)').matches) {
+                        console.log('PWA não instalado - mostrando dica');
+                        
+                        // Dica discreta após 10 segundos
+                        setTimeout(() => {
+                            const installTip = document.createElement('div');
+                            installTip.innerHTML = `
+                                <div style="
+                                    position: fixed;
+                                    bottom: 60px;
+                                    left: 50%;
+                                    transform: translateX(-50%);
+                                    background: #007bff;
+                                    color: white;
+                                    padding: 10px 15px;
+                                    border-radius: 20px;
+                                    font-size: 14px;
+                                    z-index: 999;
+                                    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+                                    text-align: center;
+                                    max-width: 300px;
+                                ">
+                                    💡 Para instalar: Toque em ⋮ → "Adicionar à tela inicial"
+                                </div>
+                            `;
+                            document.body.appendChild(installTip);
+                            
+                            // Remove após 15 segundos
+                            setTimeout(() => {
+                                if (installTip.parentNode) {
+                                    installTip.parentNode.removeChild(installTip);
+                                }
+                            }, 15000);
+                        }, 10000);
                     }
-                };
-                document.body.appendChild(updateBtn);
-                updateBtn.style.display = 'flex';
+                }, 2000);
+            }
+            
+            // Botão debug (apenas em desenvolvimento)
+            if (window.location.hostname.includes('github.io') || window.location.hostname.includes('localhost')) {
+                const debugBtn = document.createElement('button');
+                debugBtn.className = 'debug-btn';
+                debugBtn.innerHTML = '🔄 Limpar Cache';
+                debugBtn.title = 'Limpar cache manualmente';
+                debugBtn.onclick = clearCacheManual;
+                document.body.appendChild(debugBtn);
+                debugBtn.style.display = 'block';
             }
         });
     </script>
