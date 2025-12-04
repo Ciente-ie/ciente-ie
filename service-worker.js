@@ -1,6 +1,6 @@
-// service-worker.js - Versão 2.7
-const CACHE_NAME = 'ciente-hrv-cache-v11';
-const APP_VERSION = '2.7';
+// service-worker.js - Versão 3.0
+const CACHE_NAME = 'ciente-hrv-cache-v12';
+const APP_VERSION = '3.0';
 const CACHE_URLS = [
   './',
   './index.html',
