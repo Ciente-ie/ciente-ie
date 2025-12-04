@@ -11,7 +11,7 @@
         :root {
             --app-height: 100vh;
             --vh: 1vh;
-            --version: '2.2';
+            --version: '2.3';
         }
 
         * {
@@ -23,7 +23,7 @@
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background: #eef1f3;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             color: #222;
             min-height: 100vh;
             display: flex;
@@ -34,487 +34,427 @@
             touch-action: manipulation;
         }
 
-        body.tablet-mode {
-            height: calc(var(--app-height, 100vh) - 40px);
-            min-height: calc(var(--app-height, 100vh) - 40px);
-        }
-
         h1 {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin: 0 0 20px 0;
             color: #1a1a1a;
             text-align: center;
             width: 100%;
-            padding: 0 10px;
+            padding: 0;
         }
 
         #athletes {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 20px;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             justify-content: center;
-            align-items: stretch;
+            align-items: flex-start;
         }
 
         .card {
             background: #ffffff;
-            border-radius: 16px;
-            padding: 22px 28px;
-            border: 2px solid #dedede;
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #ddd;
             display: flex;
-            justify-content: space-between;
-            gap: 25px;
+            gap: 20px;
             transition: all 0.3s ease;
-            width: calc(50% - 15px);
-            max-width: 600px;
-            min-width: 450px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: calc(50% - 10px);
+            max-width: 580px;
+            min-width: 380px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+            height: fit-content;
+        }
+
+        /* LADO ESQUERDO COMPACTO */
+        .left {
+            width: 180px; /* FIXO E COMPACTO */
+            display: flex;
+            flex-direction: column;
             flex-shrink: 0;
         }
 
-        .card:hover {
-            box-shadow: 0px 6px 16px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-
-        .left {
-            width: 42%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .right {
-            width: 58%;
-            border-left: 2px solid #e2e2e2;
-            padding-left: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        select {
+        .left select {
             width: 100%;
-            padding: 10px 12px;
-            border-radius: 8px;
+            padding: 8px 10px;
+            border-radius: 6px;
             border: 1px solid #ccc;
-            margin-bottom: 15px;
-            font-size: 16px;
+            margin-bottom: 12px;
+            font-size: 14px;
             background: white;
-            min-height: 46px;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 16px;
-            cursor: pointer;
+            height: 38px;
         }
 
-        button {
+        .left button {
             width: 100%;
-            padding: 14px;
+            padding: 10px;
             border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.2s ease;
+            margin-bottom: 10px;
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            min-height: 50px;
+            gap: 6px;
         }
 
         .connect { background: #007bff; color:#fff; }
         .connect.connected { background: #009b2e !important; }
-
         .start { background: #ff9800; color:white; }
         .start:disabled { background: #c77b00; cursor: not-allowed; opacity: 0.7; }
-
         .finish { background: #d91b61; color:white; display:none; }
-        .finish:hover { background: #c61356; }
 
         .status {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 600;
-            margin-top: 15px;
+            margin-top: 10px;
             color: #222;
-            min-height: 24px;
-            padding: 8px 12px;
+            min-height: 20px;
+            padding: 6px 8px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
         }
 
-        /* ECG animation */
-        .pulseRow {
-            display: none;
-            gap: 6px;
-            align-items: flex-end;
-            height: 50px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .pulseBar {
-            width: 12px;
-            height: 30px;
-            background: #ff2b2b;
-            animation: pulse 0.7s ease-in-out infinite alternate;
-            border-radius: 4px 4px 0 0;
-        }
-        @keyframes pulse {
-            0% { height: 15px; opacity: 0.6; }
-            100% { height: 50px; opacity: 1; }
-        }
-
-        /* SCORE */
-        .scoreSection {
+        /* LADO DIREITO - DADOS E CÍRCULO NA MESMA LINHA */
+        .right {
+            width: calc(100% - 200px);
             display: flex;
             flex-direction: column;
-            width: 100%;
-            align-items: center;
+        }
+
+        .right-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
             gap: 15px;
         }
 
-        .scoreData {
-            font-size: 17px;
-            font-weight: 600;
-            line-height: 1.5;
-            width: 100%;
-            text-align: center;
+        .live-data {
+            flex: 1;
+            min-width: 150px;
         }
 
-        .scoreContainer {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
+        .live-data p {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .live-data span {
+            font-weight: 700;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .pulseRow {
+            display: none;
+            gap: 5px;
+            align-items: flex-end;
+            height: 40px;
             justify-content: center;
+            margin: 10px 0;
+        }
+
+        .pulseBar {
+            width: 10px;
+            height: 25px;
+            background: #ff2b2b;
+            animation: pulse 0.7s ease-in-out infinite alternate;
+            border-radius: 3px 3px 0 0;
+        }
+
+        @keyframes pulse {
+            0% { height: 12px; opacity: 0.6; }
+            100% { height: 40px; opacity: 1; }
+        }
+
+        /* CÍRCULO DE SCORE */
+        .score-circle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 140px;
         }
 
         .scoreCircle {
-            width: 140px;
-            height: 140px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            font-size: 42px;
+            font-size: 32px;
             font-weight: 800;
             display: flex;
             justify-content: center;
             align-items: center;
             visibility: hidden;
             color: #fff;
-            box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
             transition: all 0.4s ease;
-            border: 4px solid white;
+            border: 3px solid white;
+            margin-bottom: 8px;
         }
 
         .interp {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 700;
             visibility: hidden;
             text-align: center;
-            max-width: 180px;
-            line-height: 1.3;
-            padding: 10px;
-            border-radius: 10px;
+            line-height: 1.2;
+            padding: 6px 10px;
+            border-radius: 8px;
             background: rgba(255,255,255,0.9);
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* RESULTADOS (abaixo) */
         .results {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
-            margin-top: 15px;
             visibility: hidden;
             line-height: 1.4;
-            text-align: center;
+            text-align: left;
             padding: 10px;
             background: #f8f9fa;
             border-radius: 8px;
             width: 100%;
+            margin-top: 10px;
         }
 
         /* Hover effects */
         button:hover { filter: brightness(0.92); }
         button:active { transform: scale(0.97); }
 
-        /* Mobile (até 767px) */
+        /* MOBILE (até 767px) */
         @media (max-width: 767px) {
             body {
-                padding: 15px 10px;
-                min-height: -webkit-fill-available;
+                padding: 10px;
             }
             
             #athletes {
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
                 align-items: center;
             }
             
             .card {
                 width: 100% !important;
-                max-width: 500px !important;
+                max-width: 100% !important;
                 min-width: unset !important;
                 flex-direction: column;
-                padding: 18px;
+                padding: 15px;
                 margin-bottom: 0;
             }
             
-            .left, .right {
-                width: 100% !important;
-                border-left: none !important;
-                border-top: 2px solid #e2e2e2;
-                padding-left: 0 !important;
-                padding-top: 18px;
-            }
-            
             .left {
-                border-top: none;
-                padding-top: 0;
+                width: 100% !important;
+                margin-bottom: 15px;
             }
             
-            .scoreSection {
-                gap: 12px;
+            .right {
+                width: 100% !important;
             }
             
-            .scoreContainer {
+            .right-top {
                 flex-direction: column;
+                align-items: center;
                 gap: 15px;
             }
             
+            .live-data {
+                width: 100%;
+                text-align: center;
+            }
+            
             .scoreCircle {
-                width: 130px;
-                height: 130px;
-                font-size: 38px;
-            }
-            
-            .pulseRow {
-                margin: 12px 0;
-            }
-            
-            select, button {
-                font-size: 16px;
-                min-height: 48px;
+                width: 100px;
+                height: 100px;
+                font-size: 28px;
             }
             
             h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
+                font-size: 22px;
+                margin-bottom: 15px;
             }
         }
 
-        /* Tablet pequeno (768px a 900px) */
-        @media (min-width: 768px) and (max-width: 900px) {
+        /* TABLET (768px a 1024px) */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .card {
+                width: calc(50% - 10px);
+                min-width: 350px;
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .left {
+                width: 160px;
+            }
+            
+            .right {
+                width: calc(100% - 175px);
+            }
+            
+            .scoreCircle {
+                width: 100px;
+                height: 100px;
+                font-size: 30px;
+            }
+            
+            .interp {
+                font-size: 13px;
+                padding: 5px 8px;
+            }
+        }
+
+        /* DESKTOP (1025px+) */
+        @media (min-width: 1025px) {
+            body {
+                padding: 20px;
+            }
+            
+            #athletes {
+                gap: 25px;
+                max-width: 1300px;
+            }
+            
             .card {
                 width: calc(50% - 12px);
-                min-width: 350px;
-                padding: 18px;
-                gap: 20px;
+                max-width: 600px;
+                min-width: 400px;
+                padding: 20px;
+            }
+            
+            .left {
+                width: 180px;
+            }
+            
+            .right {
+                width: calc(100% - 200px);
             }
             
             .scoreCircle {
                 width: 120px;
                 height: 120px;
-                font-size: 36px;
-            }
-            
-            .interp {
-                font-size: 16px;
-                max-width: 150px;
-            }
-        }
-
-        /* Tablet médio (901px a 1024px) */
-        @media (min-width: 901px) and (max-width: 1024px) {
-            .card {
-                width: calc(50% - 15px);
-                min-width: 380px;
-            }
-        }
-
-        /* Desktop (1025px+) */
-        @media (min-width: 1025px) {
-            body {
-                padding: 25px;
-            }
-            
-            #athletes {
-                gap: 30px;
-            }
-            
-            .card {
-                width: calc(50% - 15px);
-                max-width: 650px;
-                min-width: 480px;
-                padding: 25px 30px;
-            }
-            
-            .scoreCircle {
-                width: 150px;
-                height: 150px;
-                font-size: 44px;
+                font-size: 34px;
             }
             
             h1 {
-                font-size: 32px;
-                margin-bottom: 30px;
+                font-size: 26px;
+                margin-bottom: 25px;
             }
         }
 
-        /* Landscape específico */
+        /* LANDSCAPE ESPECÍFICO */
         @media (orientation: landscape) and (max-height: 600px) {
             body {
                 padding: 10px;
             }
             
             .card {
-                padding: 15px;
-                gap: 15px;
-                min-width: 400px;
+                padding: 12px;
+                gap: 12px;
+                min-width: 350px;
             }
             
             .scoreCircle {
-                width: 110px;
-                height: 110px;
-                font-size: 32px;
+                width: 90px;
+                height: 90px;
+                font-size: 26px;
             }
             
             button, select {
-                min-height: 44px;
-                padding: 10px;
+                min-height: 36px;
+                padding: 8px;
+                font-size: 13px;
             }
         }
 
-        /* Correção para iOS Safari */
-        @supports (-webkit-touch-callout: none) {
-            body {
-                min-height: -webkit-fill-available;
-            }
-            
-            select {
-                font-size: 16px;
-            }
-        }
-
-        /* Versão info */
-        .version-info {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 12px;
-            color: #666;
-            background: rgba(255,255,255,0.9);
-            padding: 4px 10px;
-            border-radius: 12px;
-            z-index: 1000;
-            border: 1px solid #ddd;
-            font-family: monospace;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .version-info::before {
-            content: '🔄';
-            font-size: 10px;
-        }
-
-        /* Botão de atualização */
+        /* BOTÃO DE ATUALIZAÇÃO (ESCONDIDO POR PADRÃO) */
         .update-button {
             position: fixed;
-            bottom: 70px;
-            right: 20px;
-            background: #28a745;
+            bottom: 15px;
+            right: 15px;
+            background: #6c757d;
             color: white;
-            padding: 10px 16px;
-            border-radius: 20px;
+            padding: 6px 12px;
+            border-radius: 15px;
             border: none;
-            font-size: 13px;
+            font-size: 11px;
             cursor: pointer;
-            z-index: 9998;
-            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+            z-index: 1000;
+            opacity: 0.7;
             display: none;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             transition: all 0.3s ease;
         }
 
         .update-button:hover {
-            background: #218838;
-            transform: translateY(-2px);
+            opacity: 1;
+            background: #5a6268;
         }
 
-        /* Toast de atualização */
+        /* TOAST DE ATUALIZAÇÃO */
         .update-toast {
             position: fixed;
-            top: 20px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
             background: #17a2b8;
             color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
+            padding: 10px 20px;
+            border-radius: 20px;
             z-index: 10000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: none;
             align-items: center;
             gap: 10px;
             animation: slideDown 0.3s ease;
+            font-size: 14px;
         }
 
         @keyframes slideDown {
             from { top: -50px; opacity: 0; }
-            to { top: 20px; opacity: 1; }
+            to { top: 15px; opacity: 1; }
         }
 
-        /* Loader de atualização */
-        .update-loader {
-            display: none;
+        /* VERSÃO INFO */
+        .version-info {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: #888;
             background: rgba(255,255,255,0.9);
-            z-index: 10001;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .update-loader::after {
-            content: '';
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            padding: 3px 8px;
+            border-radius: 10px;
+            z-index: 999;
+            border: 1px solid #eee;
+            font-family: monospace;
         }
     </style>
 </head>
 
 <body>
-    <div class="version-info">v2.2</div>
+    <div class="version-info">v2.3</div>
     <div class="update-toast" id="updateToast">
-        <span>🔄 Nova versão disponível!</span>
-        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:4px 12px;border-radius:12px;font-weight:bold;cursor:pointer;">Atualizar</button>
-    </div>
-    <div class="update-loader" id="updateLoader">
-        <div style="font-size:18px;font-weight:bold;color:#007bff;">Atualizando...</div>
+        <span>🔄 Nova versão!</span>
+        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:3px 10px;border-radius:10px;font-weight:bold;cursor:pointer;font-size:12px;">
+            Atualizar
+        </button>
     </div>
     
     <h1>🏥 Ciente - Prontidão HRV</h1>
@@ -522,7 +462,7 @@
 
     <script>
         // ===== CONFIGURAÇÕES =====
-        const APP_VERSION = '2.2';
+        const APP_VERSION = '2.3';
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -535,31 +475,16 @@
         // ===== VERIFICAR ATUALIZAÇÕES =====
         async function checkForUpdates() {
             try {
-                // Verifica se há nova versão no servidor
                 const response = await fetch(`./index.html?v=${Date.now()}`);
                 const text = await response.text();
-                
-                // Extrai versão do HTML
                 const versionMatch = text.match(/const APP_VERSION = ['"]([^'"]+)['"]/);
                 const serverVersion = versionMatch ? versionMatch[1] : '1.0';
-                
-                // Compara com versão local
                 const localVersion = localStorage.getItem('app_version') || APP_VERSION;
                 
                 if (serverVersion !== localVersion) {
-                    console.log(`Nova versão disponível: ${serverVersion} (atual: ${localVersion})`);
-                    
-                    // Mostra toast de atualização
                     const toast = document.getElementById('updateToast');
                     toast.style.display = 'flex';
-                    toast.innerHTML = `
-                        <span>🔄 Nova versão ${serverVersion} disponível!</span>
-                        <button onclick="applyUpdate()" style="background:white;color:#17a2b8;border:none;padding:4px 12px;border-radius:12px;font-weight:bold;cursor:pointer;margin-left:10px;">
-                            Atualizar
-                        </button>
-                    `;
                     
-                    // Auto-esconde após 30 segundos
                     setTimeout(() => {
                         if (toast.style.display === 'flex') {
                             toast.style.opacity = '0';
@@ -568,85 +493,35 @@
                                 toast.style.opacity = '1';
                             }, 500);
                         }
-                    }, 30000);
+                    }, 10000);
                     
                     return true;
                 }
                 return false;
             } catch (error) {
-                console.log('Erro ao verificar atualizações:', error);
                 return false;
             }
         }
 
-        // ===== APLICAR ATUALIZAÇÃO =====
-        function applyUpdate() {
-            const loader = document.getElementById('updateLoader');
-            loader.style.display = 'flex';
-            
-            // Limpa caches
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    regs.forEach(reg => reg.unregister());
-                    
-                    caches.keys().then(keys => {
-                        keys.forEach(key => caches.delete(key));
-                        
-                        // Limpa localStorage
-                        localStorage.clear();
-                        sessionStorage.clear();
-                        
-                        // Salva nova versão
-                        localStorage.setItem('app_version', APP_VERSION);
-                        localStorage.setItem('last_update', new Date().toISOString());
-                        
-                        // Recarrega após 2 segundos
-                        setTimeout(() => {
-                            window.location.reload(true);
-                        }, 2000);
-                    });
-                });
-            }
-        }
-
-        // ===== ATUALIZAÇÃO AUTOMÁTICA DO SERVICE WORKER =====
+        // ===== ATUALIZAÇÃO AUTOMÁTICA =====
         function setupAutoUpdate() {
             if ('serviceWorker' in navigator) {
-                // Registra service worker
                 navigator.serviceWorker.register('service-worker.js?v=' + APP_VERSION)
                     .then(registration => {
-                        console.log('✅ Service Worker registrado:', registration.scope);
-                        
-                        // Verifica atualizações periodicamente
                         setInterval(() => {
                             registration.update();
-                        }, 5 * 60 * 1000); // A cada 5 minutos
+                        }, 5 * 60 * 1000);
                         
-                        // Escuta por nova versão
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
-                            console.log('🔍 Nova versão do Service Worker encontrada');
-                            
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('📦 Nova versão pronta para instalação');
-                                    
-                                    // Mostra notificação
-                                    if (Notification.permission === 'granted') {
-                                        new Notification('Ciente HRV Atualizado', {
-                                            body: 'Nova versão disponível! Recarregue para atualizar.',
-                                            icon: './icon-192.png'
-                                        });
-                                    }
+                                    checkForUpdates();
                                 }
                             });
                         });
-                    })
-                    .catch(error => {
-                        console.error('❌ Erro Service Worker:', error);
                     });
                 
-                // Força atualização se solicitado
                 if (window.location.search.includes('forceUpdate=1')) {
                     navigator.serviceWorker.getRegistrations().then(regs => {
                         regs.forEach(reg => reg.unregister());
@@ -667,56 +542,24 @@
             
             if (!athletesContainer || cards.length === 0) return;
             
-            // Tablet/Mobile
             if (width <= 767) {
                 athletesContainer.style.flexDirection = 'column';
                 athletesContainer.style.alignItems = 'center';
                 
                 cards.forEach(card => {
                     card.style.width = '100%';
-                    card.style.maxWidth = '500px';
                     card.style.flexDirection = 'column';
-                    
-                    const right = card.querySelector('.right');
-                    if (right) {
-                        right.style.borderLeft = 'none';
-                        right.style.borderTop = '2px solid #e2e2e2';
-                        right.style.paddingLeft = '0';
-                        right.style.paddingTop = '18px';
-                        right.style.width = '100%';
-                    }
-                    
-                    const left = card.querySelector('.left');
-                    if (left) {
-                        left.style.width = '100%';
-                    }
                 });
-            } 
-            // Desktop/Tablet Landscape
-            else {
+            } else {
                 athletesContainer.style.flexDirection = 'row';
                 athletesContainer.style.flexWrap = 'wrap';
                 athletesContainer.style.justifyContent = 'center';
                 
-                const cardWidth = width < 1024 ? 'calc(50% - 15px)' : 'calc(50% - 20px)';
+                const cardWidth = width < 1024 ? 'calc(50% - 10px)' : 'calc(50% - 12px)';
                 
                 cards.forEach(card => {
                     card.style.width = cardWidth;
                     card.style.flexDirection = 'row';
-                    
-                    const right = card.querySelector('.right');
-                    if (right) {
-                        right.style.borderLeft = '2px solid #e2e2e2';
-                        right.style.borderTop = 'none';
-                        right.style.paddingLeft = '25px';
-                        right.style.paddingTop = '0';
-                        right.style.width = '58%';
-                    }
-                    
-                    const left = card.querySelector('.left');
-                    if (left) {
-                        left.style.width = '42%';
-                    }
                 });
             }
         }
@@ -733,25 +576,25 @@
                         <select id="athleteSelect${i}">
                             ${athletesList.map(a => `<option>${a}</option>`)}
                         </select>
-                        <button id="connect${i}" class="connect">📶 Conectar</button>
-                        <button id="start${i}" class="start" disabled>▶️ Iniciar</button>
-                        <button id="finish${i}" class="finish">⏹️ Finalizar</button>
-                        <p id="status${i}" class="status">Aguardando conexão...</p>
+                        <button id="connect${i}" class="connect">Conectar</button>
+                        <button id="start${i}" class="start" disabled>Iniciar</button>
+                        <button id="finish${i}" class="finish">Finalizar</button>
+                        <p id="status${i}" class="status">Aguardando...</p>
                     </div>
                     <div class="right">
-                        <div class="scoreSection">
-                            <div class="scoreData">
+                        <div class="right-top">
+                            <div class="live-data">
                                 <p><b>FC:</b> <span id="fc${i}">--</span> bpm</p>
                                 <p><b>RR:</b> <span id="rr${i}">--</span> ms</p>
+                                <div class="pulseRow" id="pulse${i}">
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                    <div class="pulseBar"></div>
+                                </div>
                             </div>
-                            <div class="pulseRow" id="pulse${i}">
-                                <div class="pulseBar"></div>
-                                <div class="pulseBar"></div>
-                                <div class="pulseBar"></div>
-                                <div class="pulseBar"></div>
-                                <div class="pulseBar"></div>
-                            </div>
-                            <div class="scoreContainer">
+                            <div class="score-circle-container">
                                 <div id="circle${i}" class="scoreCircle"></div>
                                 <div id="interp${i}" class="interp"></div>
                             </div>
@@ -784,14 +627,13 @@
                 heartChar.addEventListener("characteristicvaluechanged", parseHR);
                 currentIndex = i;
 
-                setStatus(i, "✅ Conectado!");
+                setStatus(i, "Conectado!");
                 document.getElementById(`connect${i}`).classList.add("connected");
-                document.getElementById(`connect${i}`).innerHTML = "✅ Conectado";
+                document.getElementById(`connect${i}`).innerHTML = "Conectado";
                 document.getElementById(`start${i}`).disabled = false;
 
             } catch (err) {
-                setStatus(i, "❌ Erro ao conectar");
-                console.error("Erro Bluetooth:", err);
+                setStatus(i, "Erro ao conectar");
             }
         }
 
@@ -815,7 +657,7 @@
         function startMonitoring(i) {
             rrData = []; hrData = [];
             currentIndex = i;
-            setStatus(i, "🔧 Calibrando...");
+            setStatus(i, "Calibrando...");
             document.getElementById(`pulse${i}`).style.display = "flex";
             document.getElementById(`start${i}`).disabled = true;
             document.getElementById(`connect${i}`).disabled = true;
@@ -824,8 +666,8 @@
             let timer = setInterval(() => {
                 t--;
                 setStatus(i, t > MONITOR_TIME ? 
-                    `🔧 Calibrando... (${t - MONITOR_TIME}s)` : 
-                    `📊 Analisando... (${t}s)`);
+                    `Calibrando... (${t - MONITOR_TIME}s)` : 
+                    `Analisando... (${t}s)`);
 
                 if (t <= 0) {
                     clearInterval(timer);
@@ -844,7 +686,7 @@
             return +(Math.log(Math.sqrt(diffs.reduce((a, b) => a + b) / diffs.length))).toFixed(2);
         }
 
-        // ===== FINALIZAR TESTE - CÁLCULO REVISADO =====
+        // ===== FINALIZAR TESTE =====
         function finishMonitoring(i) {
             document.getElementById(`pulse${i}`).style.display = "none";
 
@@ -855,7 +697,7 @@
             document.getElementById(`fc${i}`).textContent = meanHR;
             document.getElementById(`rr${i}`).textContent = meanRR;
 
-            // ===== NOVO CÁLCULO REVISADO =====
+            // CÁLCULO DO SCORE
             let score;
             if (ln < 3.0) {
                 score = 10 + ((ln - 2.0) * 20);
@@ -879,11 +721,10 @@
             let interp = document.getElementById(`interp${i}`);
             let results = document.getElementById(`results${i}`);
 
-            // Exibir resultados
             results.innerHTML = `lnRMSSD: ${ln}<br>RR Médio: ${meanRR} ms`;
             results.style.visibility = circle.style.visibility = interp.style.visibility = "visible";
 
-            // ===== NOVAS LEGENDAS CORRIGIDAS =====
+            // NOVAS LEGENDAS
             let interpretation = "";
             let color = "";
 
@@ -915,7 +756,7 @@
             saveCSV(i);
             document.getElementById(`finish${i}`).style.display = "block";
             document.getElementById(`connect${i}`).disabled = false;
-            setStatus(i, "✅ Concluído!");
+            setStatus(i, "Concluído!");
         }
 
         // ===== SALVAR CSV =====
@@ -951,56 +792,37 @@
 
         // ===== INICIALIZAÇÃO =====
         document.addEventListener('DOMContentLoaded', () => {
-            console.log(`🚀 Iniciando Ciente HRV v${APP_VERSION}...`);
-            
-            // Verifica versão salva
             const savedVersion = localStorage.getItem('app_version');
             if (savedVersion !== APP_VERSION) {
-                console.log(`📦 Atualizando de v${savedVersion || '1.0'} para v${APP_VERSION}`);
                 localStorage.setItem('app_version', APP_VERSION);
-                localStorage.setItem('last_update', new Date().toISOString());
             }
             
             buildUI();
             setupAutoUpdate();
             
-            // Verifica atualizações após 10 segundos
             setTimeout(checkForUpdates, 10000);
-            
-            // Verifica a cada 5 minutos
             setInterval(checkForUpdates, 5 * 60 * 1000);
             
-            // Ajusta layout quando redimensionar
             window.addEventListener('resize', adjustLayout);
             window.addEventListener('orientationchange', () => {
                 setTimeout(adjustLayout, 300);
             });
             
-            // Botão para forçar atualização
-            const forceUpdateBtn = document.createElement('button');
-            forceUpdateBtn.className = 'update-button';
-            forceUpdateBtn.id = 'forceUpdateBtn';
-            forceUpdateBtn.innerHTML = '🔄 Forçar Atualização';
-            forceUpdateBtn.onclick = () => {
-                if (confirm('Forçar atualização do app? Isso irá limpar o cache.')) {
-                    applyUpdate();
-                }
-            };
-            document.body.appendChild(forceUpdateBtn);
-            
-            // Mostra botão se for desenvolvimento
-            if (window.location.hostname.includes('github.io')) {
-                forceUpdateBtn.style.display = 'flex';
+            // Botão de atualização apenas em desktop
+            if (window.innerWidth > 1024) {
+                const updateBtn = document.createElement('button');
+                updateBtn.className = 'update-button';
+                updateBtn.innerHTML = '🔄';
+                updateBtn.title = 'Forçar atualização';
+                updateBtn.onclick = () => {
+                    if (confirm('Recarregar para verificar atualizações?')) {
+                        window.location.reload();
+                    }
+                };
+                document.body.appendChild(updateBtn);
+                updateBtn.style.display = 'flex';
             }
-            
-            // Log para debug
-            console.log('User Agent:', navigator.userAgent);
-            console.log('Tela:', window.innerWidth, 'x', window.innerHeight);
-            console.log('Orientação:', screen.orientation?.type || 'não disponível');
         });
-
-        // ===== EXPORT FUNCTIONS =====
-        window.applyUpdate = applyUpdate;
     </script>
 </body>
 </html>
