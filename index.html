@@ -11,10 +11,12 @@
         :root {
             --app-height: 100vh;
             --vh: 1vh;
+            --version: '2.2';
         }
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -29,6 +31,7 @@
             align-items: center;
             width: 100%;
             overflow-x: hidden;
+            touch-action: manipulation;
         }
 
         body.tablet-mode {
@@ -43,83 +46,111 @@
             color: #1a1a1a;
             text-align: center;
             width: 100%;
+            padding: 0 10px;
+        }
+
+        #athletes {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 25px;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            justify-content: center;
+            align-items: stretch;
         }
 
         .card {
             background: #ffffff;
-            width: 100%;
-            max-width: 950px;
             border-radius: 16px;
             padding: 22px 28px;
             border: 2px solid #dedede;
-            margin: 0 auto 25px;
             display: flex;
             justify-content: space-between;
-            gap: 32px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            gap: 25px;
+            transition: all 0.3s ease;
+            width: calc(50% - 15px);
+            max-width: 600px;
+            min-width: 450px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            flex-shrink: 0;
         }
 
         .card:hover {
-            box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0px 6px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
 
         .left {
-            width: 32%;
+            width: 42%;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
         }
 
         .right {
-            width: 63%;
+            width: 58%;
             border-left: 2px solid #e2e2e2;
-            padding-left: 26px;
+            padding-left: 25px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
         select {
-            width: fit-content;
-            padding: 8px 10px;
-            border-radius: 6px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
             border: 1px solid #ccc;
-            margin-bottom: 12px;
-            font-size: 15px;
+            margin-bottom: 15px;
+            font-size: 16px;
             background: white;
-            min-height: 44px;
+            min-height: 46px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            cursor: pointer;
         }
 
         button {
-            width: 170px;
+            width: 100%;
             padding: 14px;
             border: none;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            min-height: 50px;
         }
 
         .connect { background: #007bff; color:#fff; }
         .connect.connected { background: #009b2e !important; }
 
         .start { background: #ff9800; color:white; }
-        .start:disabled { background: #c77b00; cursor: default; opacity: 0.7; }
+        .start:disabled { background: #c77b00; cursor: not-allowed; opacity: 0.7; }
 
         .finish { background: #d91b61; color:white; display:none; }
         .finish:hover { background: #c61356; }
 
         .status {
-            font-size: 17px;
-            font-weight: bold;
-            margin-top: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 15px;
             color: #222;
             min-height: 24px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
         }
 
         /* ECG animation */
@@ -129,136 +160,90 @@
             align-items: flex-end;
             height: 50px;
             justify-content: center;
+            margin: 15px 0;
         }
 
         .pulseBar {
-            width: 11px;
+            width: 12px;
             height: 30px;
             background: #ff2b2b;
-            animation: pulse 0.65s ease-in-out infinite alternate;
+            animation: pulse 0.7s ease-in-out infinite alternate;
             border-radius: 4px 4px 0 0;
         }
         @keyframes pulse {
-            from { height: 18px; opacity: 0.65; }
-            to { height: 55px; opacity: 1; }
+            0% { height: 15px; opacity: 0.6; }
+            100% { height: 50px; opacity: 1; }
         }
 
         /* SCORE */
         .scoreSection {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             width: 100%;
             align-items: center;
+            gap: 15px;
         }
 
         .scoreData {
             font-size: 17px;
             font-weight: 600;
             line-height: 1.5;
+            width: 100%;
+            text-align: center;
         }
 
         .scoreContainer {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
+            width: 100%;
+            justify-content: center;
         }
 
         .scoreCircle {
-            width: 150px;
-            height: 150px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            font-size: 44px;
-            font-weight: 700;
+            font-size: 42px;
+            font-weight: 800;
             display: flex;
             justify-content: center;
             align-items: center;
             visibility: hidden;
             color: #fff;
-            box-shadow: 0px 0px 25px rgba(0,0,0,0.12);
-            transition: all 0.3s ease;
+            box-shadow: 0px 8px 25px rgba(0,0,0,0.15);
+            transition: all 0.4s ease;
+            border: 4px solid white;
         }
 
         .interp {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 700;
             visibility: hidden;
-            text-align: left;
-            max-width: 200px;
+            text-align: center;
+            max-width: 180px;
             line-height: 1.3;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
         }
 
         .results {
             font-size: 15px;
             font-weight: 600;
-            margin-top: 14px;
+            margin-top: 15px;
             visibility: hidden;
             line-height: 1.4;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            width: 100%;
         }
 
         /* Hover effects */
-        button:hover { filter: brightness(0.95); }
-        button:active { transform: scale(0.98); }
-
-        /* Tablet (768px a 1024px) */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            body {
-                padding: 15px;
-                justify-content: flex-start;
-            }
-            
-            .card {
-                max-width: 95%;
-                flex-direction: row;
-                gap: 25px;
-                padding: 20px;
-                margin: 20px auto;
-            }
-            
-            .left, .right {
-                width: 48%;
-            }
-            
-            button {
-                padding: 14px;
-                font-size: 16px;
-                min-height: 50px;
-                width: 100%;
-                max-width: 200px;
-            }
-            
-            select {
-                font-size: 16px;
-                padding: 10px;
-                width: 100%;
-                max-width: 200px;
-            }
-            
-            .scoreCircle {
-                width: 140px;
-                height: 140px;
-                font-size: 40px;
-            }
-        }
-
-        /* Tablets grandes (1025px a 1366px) */
-        @media (min-width: 1025px) and (max-width: 1366px) {
-            .card {
-                max-width: 1100px;
-                margin: 30px auto;
-                padding: 25px 30px;
-            }
-            
-            .scoreCircle {
-                width: 160px;
-                height: 160px;
-                font-size: 42px;
-            }
-            
-            h1 {
-                font-size: 32px;
-                margin-bottom: 30px;
-            }
-        }
+        button:hover { filter: brightness(0.92); }
+        button:active { transform: scale(0.97); }
 
         /* Mobile (até 767px) */
         @media (max-width: 767px) {
@@ -267,20 +252,27 @@
                 min-height: -webkit-fill-available;
             }
             
-            .card {
+            #athletes {
                 flex-direction: column;
                 gap: 20px;
-                padding: 15px;
-                margin-bottom: 20px;
-                max-width: 100%;
+                align-items: center;
+            }
+            
+            .card {
+                width: 100% !important;
+                max-width: 500px !important;
+                min-width: unset !important;
+                flex-direction: column;
+                padding: 18px;
+                margin-bottom: 0;
             }
             
             .left, .right {
-                width: 100%;
-                border-left: none;
+                width: 100% !important;
+                border-left: none !important;
                 border-top: 2px solid #e2e2e2;
-                padding-left: 0;
-                padding-top: 20px;
+                padding-left: 0 !important;
+                padding-top: 18px;
             }
             
             .left {
@@ -289,16 +281,12 @@
             }
             
             .scoreSection {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                gap: 15px;
+                gap: 12px;
             }
             
             .scoreContainer {
                 flex-direction: column;
                 gap: 15px;
-                margin-top: 10px;
             }
             
             .scoreCircle {
@@ -308,19 +296,12 @@
             }
             
             .pulseRow {
-                justify-content: center;
-                margin: 15px 0;
+                margin: 12px 0;
             }
             
             select, button {
-                width: 100%;
-                max-width: 280px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            button {
-                min-height: 50px;
+                font-size: 16px;
+                min-height: 48px;
             }
             
             h1 {
@@ -329,64 +310,85 @@
             }
         }
 
-        /* Orientação landscape em mobile */
+        /* Tablet pequeno (768px a 900px) */
+        @media (min-width: 768px) and (max-width: 900px) {
+            .card {
+                width: calc(50% - 12px);
+                min-width: 350px;
+                padding: 18px;
+                gap: 20px;
+            }
+            
+            .scoreCircle {
+                width: 120px;
+                height: 120px;
+                font-size: 36px;
+            }
+            
+            .interp {
+                font-size: 16px;
+                max-width: 150px;
+            }
+        }
+
+        /* Tablet médio (901px a 1024px) */
+        @media (min-width: 901px) and (max-width: 1024px) {
+            .card {
+                width: calc(50% - 15px);
+                min-width: 380px;
+            }
+        }
+
+        /* Desktop (1025px+) */
+        @media (min-width: 1025px) {
+            body {
+                padding: 25px;
+            }
+            
+            #athletes {
+                gap: 30px;
+            }
+            
+            .card {
+                width: calc(50% - 15px);
+                max-width: 650px;
+                min-width: 480px;
+                padding: 25px 30px;
+            }
+            
+            .scoreCircle {
+                width: 150px;
+                height: 150px;
+                font-size: 44px;
+            }
+            
+            h1 {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+        }
+
+        /* Landscape específico */
         @media (orientation: landscape) and (max-height: 600px) {
             body {
                 padding: 10px;
             }
             
             .card {
-                padding: 12px 16px;
+                padding: 15px;
                 gap: 15px;
-                margin-bottom: 15px;
-            }
-            
-            h1 {
-                font-size: 22px;
-                margin-bottom: 15px;
+                min-width: 400px;
             }
             
             .scoreCircle {
-                width: 100px;
-                height: 100px;
+                width: 110px;
+                height: 110px;
                 font-size: 32px;
             }
             
-            button {
-                width: 140px;
-                padding: 10px;
-                font-size: 14px;
+            button, select {
                 min-height: 44px;
-            }
-            
-            select {
-                padding: 6px;
-                font-size: 14px;
-                min-height: 40px;
-            }
-        }
-
-        /* Desktop grande */
-        @media (min-width: 1367px) {
-            body {
-                padding: 30px;
-            }
-            
-            .card {
-                max-width: 1200px;
-                padding: 30px 35px;
-                margin: 25px auto;
-            }
-            
-            .scoreCircle {
-                width: 170px;
-                height: 170px;
-                font-size: 48px;
-            }
-            
-            h1 {
-                font-size: 36px;
-                margin-bottom: 35px;
+                padding: 10px;
             }
         }
 
@@ -394,13 +396,6 @@
         @supports (-webkit-touch-callout: none) {
             body {
                 min-height: -webkit-fill-available;
-            }
-        }
-
-        /* Dispositivos touch */
-        @media (hover: none) and (pointer: coarse) {
-            button:active {
-                transform: scale(0.96);
             }
             
             select {
@@ -416,20 +411,118 @@
             font-size: 12px;
             color: #666;
             background: rgba(255,255,255,0.9);
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
             z-index: 1000;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .version-info::before {
+            content: '🔄';
+            font-size: 10px;
+        }
+
+        /* Botão de atualização */
+        .update-button {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+            z-index: 9998;
+            box-shadow: 0 3px 10px rgba(40,167,69,0.3);
+            display: none;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .update-button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Toast de atualização */
+        .update-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #17a2b8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            z-index: 10000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { top: -50px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
+        }
+
+        /* Loader de atualização */
+        .update-loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .update-loader::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 
 <body>
-    <div class="version-info">v2.1</div>
+    <div class="version-info">v2.2</div>
+    <div class="update-toast" id="updateToast">
+        <span>🔄 Nova versão disponível!</span>
+        <button onclick="window.location.reload()" style="background:white;color:#17a2b8;border:none;padding:4px 12px;border-radius:12px;font-weight:bold;cursor:pointer;">Atualizar</button>
+    </div>
+    <div class="update-loader" id="updateLoader">
+        <div style="font-size:18px;font-weight:bold;color:#007bff;">Atualizando...</div>
+    </div>
+    
     <h1>🏥 Ciente - Prontidão HRV</h1>
     <div id="athletes"></div>
 
     <script>
         // ===== CONFIGURAÇÕES =====
+        const APP_VERSION = '2.2';
         const athletesList = ["Atleta 1", "Atleta 2", "Atleta 3", "Atleta 4"];
         const MONITOR_TIME = 60;
         const CALIBRATION = 10;
@@ -439,41 +532,199 @@
         let currentIndex = 0;
         let heartChar = null;
 
-        // ===== DETECÇÃO DE DISPOSITIVO =====
-        function isTablet() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            const isIpad = /iPad/.test(navigator.userAgent);
-            const isAndroidTablet = /Android/.test(navigator.userAgent) && width >= 768;
-            return (width >= 768 && width <= 1024) || isIpad || isAndroidTablet;
+        // ===== VERIFICAR ATUALIZAÇÕES =====
+        async function checkForUpdates() {
+            try {
+                // Verifica se há nova versão no servidor
+                const response = await fetch(`./index.html?v=${Date.now()}`);
+                const text = await response.text();
+                
+                // Extrai versão do HTML
+                const versionMatch = text.match(/const APP_VERSION = ['"]([^'"]+)['"]/);
+                const serverVersion = versionMatch ? versionMatch[1] : '1.0';
+                
+                // Compara com versão local
+                const localVersion = localStorage.getItem('app_version') || APP_VERSION;
+                
+                if (serverVersion !== localVersion) {
+                    console.log(`Nova versão disponível: ${serverVersion} (atual: ${localVersion})`);
+                    
+                    // Mostra toast de atualização
+                    const toast = document.getElementById('updateToast');
+                    toast.style.display = 'flex';
+                    toast.innerHTML = `
+                        <span>🔄 Nova versão ${serverVersion} disponível!</span>
+                        <button onclick="applyUpdate()" style="background:white;color:#17a2b8;border:none;padding:4px 12px;border-radius:12px;font-weight:bold;cursor:pointer;margin-left:10px;">
+                            Atualizar
+                        </button>
+                    `;
+                    
+                    // Auto-esconde após 30 segundos
+                    setTimeout(() => {
+                        if (toast.style.display === 'flex') {
+                            toast.style.opacity = '0';
+                            setTimeout(() => {
+                                toast.style.display = 'none';
+                                toast.style.opacity = '1';
+                            }, 500);
+                        }
+                    }, 30000);
+                    
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.log('Erro ao verificar atualizações:', error);
+                return false;
+            }
         }
 
-        // ===== CORREÇÕES PARA TABLET =====
-        function applyTabletFixes() {
-            if (!isTablet()) return;
+        // ===== APLICAR ATUALIZAÇÃO =====
+        function applyUpdate() {
+            const loader = document.getElementById('updateLoader');
+            loader.style.display = 'flex';
             
-            console.log('Aplicando correções para tablet...');
-            document.body.classList.add('tablet-mode');
-            
-            // Destrava orientação
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock().catch(() => {
-                    console.log('Orientação já destravada');
+            // Limpa caches
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(regs => {
+                    regs.forEach(reg => reg.unregister());
+                    
+                    caches.keys().then(keys => {
+                        keys.forEach(key => caches.delete(key));
+                        
+                        // Limpa localStorage
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        
+                        // Salva nova versão
+                        localStorage.setItem('app_version', APP_VERSION);
+                        localStorage.setItem('last_update', new Date().toISOString());
+                        
+                        // Recarrega após 2 segundos
+                        setTimeout(() => {
+                            window.location.reload(true);
+                        }, 2000);
+                    });
                 });
             }
+        }
+
+        // ===== ATUALIZAÇÃO AUTOMÁTICA DO SERVICE WORKER =====
+        function setupAutoUpdate() {
+            if ('serviceWorker' in navigator) {
+                // Registra service worker
+                navigator.serviceWorker.register('service-worker.js?v=' + APP_VERSION)
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                        
+                        // Verifica atualizações periodicamente
+                        setInterval(() => {
+                            registration.update();
+                        }, 5 * 60 * 1000); // A cada 5 minutos
+                        
+                        // Escuta por nova versão
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('🔍 Nova versão do Service Worker encontrada');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('📦 Nova versão pronta para instalação');
+                                    
+                                    // Mostra notificação
+                                    if (Notification.permission === 'granted') {
+                                        new Notification('Ciente HRV Atualizado', {
+                                            body: 'Nova versão disponível! Recarregue para atualizar.',
+                                            icon: './icon-192.png'
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('❌ Erro Service Worker:', error);
+                    });
+                
+                // Força atualização se solicitado
+                if (window.location.search.includes('forceUpdate=1')) {
+                    navigator.serviceWorker.getRegistrations().then(regs => {
+                        regs.forEach(reg => reg.unregister());
+                        caches.keys().then(keys => {
+                            keys.forEach(key => caches.delete(key));
+                            setTimeout(() => window.location.reload(), 1000);
+                        });
+                    });
+                }
+            }
+        }
+
+        // ===== AJUSTE DE LAYOUT =====
+        function adjustLayout() {
+            const width = window.innerWidth;
+            const athletesContainer = document.getElementById('athletes');
+            const cards = document.querySelectorAll('.card');
             
-            // Ajusta altura
-            const appHeight = () => {
-                const doc = document.documentElement;
-                doc.style.setProperty('--app-height', `${window.innerHeight}px`);
-            };
-            window.addEventListener('resize', appHeight);
-            appHeight();
+            if (!athletesContainer || cards.length === 0) return;
+            
+            // Tablet/Mobile
+            if (width <= 767) {
+                athletesContainer.style.flexDirection = 'column';
+                athletesContainer.style.alignItems = 'center';
+                
+                cards.forEach(card => {
+                    card.style.width = '100%';
+                    card.style.maxWidth = '500px';
+                    card.style.flexDirection = 'column';
+                    
+                    const right = card.querySelector('.right');
+                    if (right) {
+                        right.style.borderLeft = 'none';
+                        right.style.borderTop = '2px solid #e2e2e2';
+                        right.style.paddingLeft = '0';
+                        right.style.paddingTop = '18px';
+                        right.style.width = '100%';
+                    }
+                    
+                    const left = card.querySelector('.left');
+                    if (left) {
+                        left.style.width = '100%';
+                    }
+                });
+            } 
+            // Desktop/Tablet Landscape
+            else {
+                athletesContainer.style.flexDirection = 'row';
+                athletesContainer.style.flexWrap = 'wrap';
+                athletesContainer.style.justifyContent = 'center';
+                
+                const cardWidth = width < 1024 ? 'calc(50% - 15px)' : 'calc(50% - 20px)';
+                
+                cards.forEach(card => {
+                    card.style.width = cardWidth;
+                    card.style.flexDirection = 'row';
+                    
+                    const right = card.querySelector('.right');
+                    if (right) {
+                        right.style.borderLeft = '2px solid #e2e2e2';
+                        right.style.borderTop = 'none';
+                        right.style.paddingLeft = '25px';
+                        right.style.paddingTop = '0';
+                        right.style.width = '58%';
+                    }
+                    
+                    const left = card.querySelector('.left');
+                    if (left) {
+                        left.style.width = '42%';
+                    }
+                });
+            }
         }
 
         // ===== CONSTRUIR INTERFACE =====
         function buildUI() {
             const container = document.getElementById("athletes");
+            container.innerHTML = '';
 
             for (let i = 0; i < 2; i++) {
                 container.insertAdjacentHTML("beforeend", `
@@ -483,7 +734,7 @@
                             ${athletesList.map(a => `<option>${a}</option>`)}
                         </select>
                         <button id="connect${i}" class="connect">📶 Conectar</button>
-                        <button id="start${i}" class="start">▶️ Iniciar</button>
+                        <button id="start${i}" class="start" disabled>▶️ Iniciar</button>
                         <button id="finish${i}" class="finish">⏹️ Finalizar</button>
                         <p id="status${i}" class="status">Aguardando conexão...</p>
                     </div>
@@ -513,9 +764,10 @@
                 document.getElementById(`start${i}`).onclick = () => startMonitoring(i);
                 document.getElementById(`finish${i}`).onclick = () => resetUI(i);
                 
-                // Inicialmente desabilita iniciar
                 document.getElementById(`start${i}`).disabled = true;
             }
+            
+            adjustLayout();
         }
 
         // ===== BLUETOOTH =====
@@ -631,28 +883,28 @@
             results.innerHTML = `lnRMSSD: ${ln}<br>RR Médio: ${meanRR} ms`;
             results.style.visibility = circle.style.visibility = interp.style.visibility = "visible";
 
-            // ===== NOVAS INTERPRETAÇÕES =====
+            // ===== NOVAS LEGENDAS CORRIGIDAS =====
             let interpretation = "";
             let color = "";
 
             if (score <= 30) {
-                interpretation = "⚠️ ALERTA: Descansar";
+                interpretation = "⚠️ Recuperação Muito Baixa";
                 color = "#d60000";
             } 
             else if (score <= 55) {
-                interpretation = "🔶 Treino Leve";
+                interpretation = "🔶 Recuperação Baixa";
                 color = "#ff7f00";
             } 
             else if (score <= 75) {
-                interpretation = "🟡 Treino Normal";
+                interpretation = "🟡 Recuperação Moderada";
                 color = "#ffcc00";
             } 
             else if (score <= 90) {
-                interpretation = "✅ Bom - Treino Intenso";
+                interpretation = "✅ Recuperação Boa";
                 color = "#87c440";
             } 
             else {
-                interpretation = "🏆 Excelente - Pronto para Competir";
+                interpretation = "🏆 Recuperação Excelente";
                 color = "#008f14";
             }
 
@@ -697,196 +949,58 @@
             document.getElementById(`status${i}`).textContent = m;
         }
 
-        // ===== BOTÃO INSTALAÇÃO DESKTOP =====
-        function setupInstallButton() {
-            let deferredPrompt;
-            const installBtn = document.createElement('button');
-            installBtn.innerHTML = '📦 Instalar no PC';
-            installBtn.id = 'installBtn';
-            installBtn.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: #007bff;
-                color: white;
-                padding: 12px 20px;
-                border-radius: 25px;
-                border: none;
-                font-size: 14px;
-                cursor: pointer;
-                box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-                z-index: 9999;
-                display: none;
-                align-items: center;
-                gap: 8px;
-                transition: all 0.3s ease;
-            `;
-            document.body.appendChild(installBtn);
-
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installBtn.style.display = 'flex';
-                
-                installBtn.onclick = async () => {
-                    installBtn.style.display = 'none';
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`Usuário ${outcome} a instalação`);
-                    deferredPrompt = null;
-                };
-            });
-
-            window.addEventListener('appinstalled', () => {
-                installBtn.style.display = 'none';
-            });
-
-            // Esconde após 30 segundos
-            setTimeout(() => {
-                if (installBtn.style.display === 'flex') {
-                    installBtn.style.opacity = '0';
-                    setTimeout(() => {
-                        installBtn.style.display = 'none';
-                    }, 500);
-                }
-            }, 30000);
-        }
-
-        // ===== SERVICE WORKER =====
-        function setupServiceWorker() {
-            if ('serviceWorker' in navigator) {
-                // Limpa service workers antigos
-                navigator.serviceWorker.getRegistrations().then(registrations => {
-                    for (let registration of registrations) {
-                        registration.unregister();
-                    }
-                });
-
-                // Registra novo
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('service-worker.js?v=2.1')
-                        .then(registration => {
-                            console.log('✅ Service Worker registrado:', registration.scope);
-                            
-                            // Verifica atualizações
-                            registration.addEventListener('updatefound', () => {
-                                const newWorker = registration.installing;
-                                newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                        console.log('Nova versão disponível!');
-                                        if (confirm('Nova versão disponível! Recarregar agora?')) {
-                                            window.location.reload();
-                                        }
-                                    }
-                                });
-                            });
-                        })
-                        .catch(error => {
-                            console.log('❌ Erro Service Worker:', error);
-                        });
-                });
-            }
-        }
-
-        // ===== ORIENTAÇÃO CHANGE =====
-        function setupOrientationHandler() {
-            window.addEventListener('orientationchange', () => {
-                console.log('Orientação mudou:', screen.orientation.type);
-                setTimeout(() => {
-                    window.scrollTo(0, 0);
-                }, 100);
-            });
-        }
-
-        // ===== BOTÃO CORREÇÃO TABLET =====
-        function addTabletFixButton() {
-            if (!isTablet()) return;
-            
-            const fixBtn = document.createElement('button');
-            fixBtn.innerHTML = '🔄 Ajustar Tablet';
-            fixBtn.style.cssText = `
-                position: fixed;
-                bottom: 70px;
-                right: 20px;
-                background: #ff9800;
-                color: white;
-                padding: 10px 15px;
-                border-radius: 20px;
-                border: none;
-                font-size: 13px;
-                cursor: pointer;
-                z-index: 9998;
-                box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            `;
-            
-            fixBtn.onclick = function() {
-                // Limpa tudo
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.getRegistrations().then(regs => {
-                        regs.forEach(reg => reg.unregister());
-                        caches.keys().then(keys => {
-                            keys.forEach(key => caches.delete(key));
-                            localStorage.setItem('tablet_fixed', 'true');
-                            window.location.reload(true);
-                        });
-                    });
-                }
-            };
-            
-            document.body.appendChild(fixBtn);
-            
-            // Remove após 45 segundos
-            setTimeout(() => {
-                fixBtn.style.opacity = '0';
-                setTimeout(() => {
-                    if (fixBtn.parentNode) {
-                        fixBtn.parentNode.removeChild(fixBtn);
-                    }
-                }, 500);
-            }, 45000);
-        }
-
         // ===== INICIALIZAÇÃO =====
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Iniciando Ciente HRV v2.1...');
-            console.log('Dispositivo:', isTablet() ? 'Tablet' : 'Mobile/Desktop');
-            console.log('Tela:', window.innerWidth, 'x', window.innerHeight);
-            console.log('Orientação:', screen.orientation?.type || 'não disponível');
+            console.log(`🚀 Iniciando Ciente HRV v${APP_VERSION}...`);
+            
+            // Verifica versão salva
+            const savedVersion = localStorage.getItem('app_version');
+            if (savedVersion !== APP_VERSION) {
+                console.log(`📦 Atualizando de v${savedVersion || '1.0'} para v${APP_VERSION}`);
+                localStorage.setItem('app_version', APP_VERSION);
+                localStorage.setItem('last_update', new Date().toISOString());
+            }
             
             buildUI();
-            applyTabletFixes();
-            setupServiceWorker();
-            setupInstallButton();
-            setupOrientationHandler();
-            addTabletFixButton();
+            setupAutoUpdate();
             
-            // Aplica correções se for tablet
-            if (isTablet() && !localStorage.getItem('tablet_fixed')) {
-                setTimeout(() => {
-                    if (confirm('Detectamos que está usando um tablet. Aplicar otimizações?')) {
-                        localStorage.setItem('tablet_fixed', 'true');
-                        window.location.reload();
-                    }
-                }, 2000);
+            // Verifica atualizações após 10 segundos
+            setTimeout(checkForUpdates, 10000);
+            
+            // Verifica a cada 5 minutos
+            setInterval(checkForUpdates, 5 * 60 * 1000);
+            
+            // Ajusta layout quando redimensionar
+            window.addEventListener('resize', adjustLayout);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(adjustLayout, 300);
+            });
+            
+            // Botão para forçar atualização
+            const forceUpdateBtn = document.createElement('button');
+            forceUpdateBtn.className = 'update-button';
+            forceUpdateBtn.id = 'forceUpdateBtn';
+            forceUpdateBtn.innerHTML = '🔄 Forçar Atualização';
+            forceUpdateBtn.onclick = () => {
+                if (confirm('Forçar atualização do app? Isso irá limpar o cache.')) {
+                    applyUpdate();
+                }
+            };
+            document.body.appendChild(forceUpdateBtn);
+            
+            // Mostra botão se for desenvolvimento
+            if (window.location.hostname.includes('github.io')) {
+                forceUpdateBtn.style.display = 'flex';
             }
+            
+            // Log para debug
+            console.log('User Agent:', navigator.userAgent);
+            console.log('Tela:', window.innerWidth, 'x', window.innerHeight);
+            console.log('Orientação:', screen.orientation?.type || 'não disponível');
         });
 
-        // ===== FORÇAR ATUALIZAÇÃO SE PARÂMETRO =====
-        if (window.location.search.includes('force=1')) {
-            localStorage.clear();
-            sessionStorage.clear();
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => {
-                    regs.forEach(reg => reg.unregister());
-                    caches.keys().then(keys => {
-                        keys.forEach(key => caches.delete(key));
-                    });
-                });
-            }
-        }
+        // ===== EXPORT FUNCTIONS =====
+        window.applyUpdate = applyUpdate;
     </script>
 </body>
 </html>
