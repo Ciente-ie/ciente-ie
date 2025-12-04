@@ -1,6 +1,6 @@
-// service-worker.js - Versão 2.3
-const CACHE_NAME = 'ciente-hrv-cache-v7';
-const APP_VERSION = '2.3';
+// service-worker.js - Versão 2.4
+const CACHE_NAME = 'ciente-hrv-cache-v8';
+const APP_VERSION = '2.4';
 const CACHE_URLS = [
   './',
   './index.html',
@@ -25,6 +25,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
+            console.log('Removendo cache antigo:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -40,18 +41,25 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
+        // Cache hit - retorna imediatamente
         if (response) {
           return response;
         }
         
+        // Cache miss - busca da rede
         return fetch(event.request).then(response => {
-          if (!response || response.status !== 200) {
+          // Verifica se é válido para cache
+          if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
           
+          // Clona para cache
           const responseToCache = response.clone();
+          
           caches.open(CACHE_NAME)
-            .then(cache => cache.put(event.request, responseToCache));
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
           
           return response;
         });
@@ -59,7 +67,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Mensagens para atualização
+// Mensagens para controle
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
